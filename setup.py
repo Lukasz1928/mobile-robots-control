@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='mobile-robots-control',
     version='0.1',
-    packages=['mrc'],
+    packages=['mrc', 'mrc.configuration', 'mrc.control', 'mrc.localization'],
     url='',
     license='MIT',
     author='Lukasz Niemiec',
