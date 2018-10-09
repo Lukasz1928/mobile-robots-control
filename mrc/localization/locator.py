@@ -4,9 +4,11 @@ from typing import Callable
 
 
 class Locator(threading.Thread):
-    def __init__(self, read_data: Callable, process_data: Callable, interval: float):
+    def __init__(self, robot_list: list, read_data: Callable, process_data: Callable = None, interval: float = 0.0):
         threading.Thread.__init__(self)
         self.locations = dict()
+        for robot_id in robot_list:
+            self.locations[robot_id] = None
         self.read_data = read_data
         self.process_data = process_data
         self.interval = interval
@@ -39,3 +41,11 @@ class Locator(threading.Thread):
 
     def set_interval(self, interval: float):
         self.interval = interval
+
+    def add_robot(self, robot_id):
+        if robot_id not in self.locations.keys():
+            self.locations[robot_id] = None
+
+    def remove_robot(self, robot_id):
+        if robot_id in self.locations.keys():
+            del self.locations[robot_id]
