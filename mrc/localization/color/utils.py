@@ -1,21 +1,13 @@
-import cv2
-
-import numpy as np
-
-
-def calculate_centroid_histogram(clusters):
-    numeric_labels = np.arange(0, len(np.unique(clusters.labels_)) + 1)
-    (hist, _) = np.histogram(clusters.labels_, bins=numeric_labels)
-    return hist.astype("float") / hist.sum()
+import colorsys
+from typing import Tuple
 
 
-def hsv_pixel_from_centroid(centroid):
+def hsv_pixel_from_centroid(centroid) -> Tuple[int, ...]:
     (r, g, b) = centroid[0].astype('uint8')
-    rgb_image = cv2.merge((r, g, b))
-    print(rgb_image)
-    hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
-    print(hsv)
+    return rgb2hsv(r, g, b)
 
 
-def flatten(seq):
-    return sum(seq, [])
+def rgb2hsv(r, g, b) -> Tuple[int, ...]:
+    scaled_rgb = [color / 255 for color in (r, g, b)]
+    hsv = colorsys.rgb_to_hsv(*scaled_rgb)
+    return tuple([int((color * 360)) for color in hsv])

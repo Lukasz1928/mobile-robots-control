@@ -8,7 +8,7 @@ class ColorValue(Enum):
     blue = 'blue'
 
 
-class ColorMap(Enum):
+class ColorMap:
     # Color map has to be updated during the research, values may change
     color_map = {
         ColorValue.red: range(0, 20),
