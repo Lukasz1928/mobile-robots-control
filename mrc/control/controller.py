@@ -16,8 +16,9 @@ class Controller(Thread):
     def run(self):
         self.running = True
         while self.running:
-            if self.locator.get_locations(self.configurator.my_id) is not self.configurator.get_target_position():
-                target_position = self.configurator.get_target_position()
+            target_position = self.configurator.target_position
+            if self._are_locations_approximately_same(target_position,
+                                                      self.locator.get_locations(target_position.bot_to_follow)):
                 angle = target_position.angle
                 radius = target_position.radius
                 self.drive_to_point(angle, radius)
@@ -27,3 +28,7 @@ class Controller(Thread):
 
     def stop(self):
         self.running = False
+
+    def _are_locations_approximately_same(self, location_one, location_two):
+        # TODO
+        return False
