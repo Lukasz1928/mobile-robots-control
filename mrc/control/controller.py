@@ -18,7 +18,7 @@ class Controller(Thread):
         while self.running:
             target_position = self.configurator.target_position
             if self._are_locations_approximately_same(target_position,
-                                                      self.locator.get_locations(target_position.bot_to_follow)):
+                                                      self.locator.get_locations(self.configurator.master_unit)):
                 angle = target_position.angle
                 radius = target_position.radius
                 self.drive_to_point(angle, radius)
