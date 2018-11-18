@@ -1,5 +1,6 @@
 import math
 
+
 class iterableClass(type):
     def __iter__(self):
         return self.get_iterator()
@@ -62,7 +63,20 @@ class projections(metaclass=iterableClass):
         def theta(radius, focal):
             return 2.0 * math.asin(radius / (2.0 * focal))
 
-    _projections = [equidistant, stereographic, ortographic, equisolid]
+    class rectilinear:
+        @staticmethod
+        def radius(theta, focal):
+            return focal * math.tan(theta)
+
+        @staticmethod
+        def focal(radius, theta):
+            return radius / math.tan(theta)
+
+        @staticmethod
+        def theta(radius, focal):
+            return math.atan(radius / focal)
+
+    _projections = [equidistant, stereographic, ortographic, equisolid, rectilinear]
 
     @classmethod
     def get_iterator(cls):
