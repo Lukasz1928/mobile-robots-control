@@ -7,12 +7,12 @@ from mrc.localization.color.kmeans.utils import hsv_pixel_from_centroid
 
 class Predicates:
     allowed = {
-        "gaussian": GaussianHSVPredicate()
+        'gaussian': GaussianHSVPredicate()
     }
 
 
 class Analyser:
-    def __init__(self, color_values, predicate_strategy="gaussian"):
+    def __init__(self, color_values, predicate_strategy='gaussian'):
         self._clusters = 1
         self._resolving_predicate = Predicates.allowed[predicate_strategy]
         self._color_values = color_values

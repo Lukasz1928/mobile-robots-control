@@ -14,5 +14,5 @@ class TestUtils(TestCase):
 
     @parameterized.expand(zip(common.centroid_rgb_values, common.centroid_hsv_values))
     def test_rgb2hsv(self, float_rgb_values, expected_values):
-        int_rgb_values = np.asarray(float_rgb_values).astype("uint8").reshape(1, 3)[0]
+        int_rgb_values = np.asarray(float_rgb_values).astype('uint8').reshape(1, 3)[0]
         self.assertEqual(expected_values, rgb2hsv(*int_rgb_values))
