@@ -9,6 +9,6 @@ setup(
     author='Lukasz Niemiec',
     author_email='Lukasz19281@gmail.com',
     description='Library for management of mobile robots location',
-    test_suite='mrc.tests',
+    test_suite='tests',
     tests_require=['parameterized'],
 )
