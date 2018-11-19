@@ -8,5 +8,7 @@ setup(
     license='MIT',
     author='Lukasz Niemiec',
     author_email='Lukasz19281@gmail.com',
-    description='Library for management of mobile robots location'
+    description='Library for management of mobile robots location',
+    test_suite='mrc.tests',
+    tests_require=['parameterized'],
 )
