@@ -11,14 +11,9 @@ def _cartesian2polar(vector):
     return np.asarray([np.sqrt(np.add(np.power(x, 2), np.power(y, 2))), np.arctan2(y, x)])
 
 
-def _vec_len(vec):
-    x, y = vec
-    return np.sqrt(np.add(np.power(x, 2), np.power(y, 2)))
-
-
 def _normalize_angle(angle):
     normalized = np.pi / 2 - angle
-    if normalized < -np.pi:
+    if normalized <= -np.pi:
         normalized += 2 * np.pi
     elif normalized > np.pi:
         normalized -= 2 * np.pi
@@ -51,7 +46,7 @@ def translate(v_old, distance, rotation):
         Angle should be measured clockwise and having value of 0 along vertical coordinate system axis.
     """
     r_old, theta_old = v_old
-    theta_new = _normalize_angle(theta_old) + rotation
+    theta_new = _normalize_angle(theta_old) + rotation if r_old != 0 else 0
     v_new = _polar2cartesian((r_old, theta_new))
     v_new = np.subtract(v_new, [0, distance])
     r, theta = _cartesian2polar(v_new)
@@ -79,15 +74,16 @@ def calculate(pos_prev, pos_current, coord_mov, timedelta):
     array-like
         Calculated vector of movement between given positions in new coordinate system.
     float
-        Speed of movement between given positions.
+        Speed of movement between given positions, -1 if timeslot value was not provided.
 
     Notes
     -----
         Angle should be measured clockwise and having value of 0 along vertical coordinate system axis.
     """
     distance, rotation = coord_mov
-    pos_prev_c = _polar2cartesian(translate(pos_prev, distance, rotation))
+    pos_prev_c = _polar2cartesian(_normalize_polars(translate(pos_prev, distance, rotation)))
     pos_current_c = _polar2cartesian(_normalize_polars(pos_current))
-    vector = np.subtract(pos_current_c, pos_prev_c)
-    speed = _vec_len(vector) / timedelta if timedelta != 0 else 0
+    print(pos_prev_c, pos_current_c)
+    vector = _normalize_polars(_cartesian2polar(np.subtract(pos_current_c, pos_prev_c)))
+    speed = vector[0] / timedelta if timedelta != 0 else -1
     return vector, speed
