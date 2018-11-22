@@ -16,13 +16,6 @@ def _vec_len(vec):
     return np.sqrt(np.add(np.power(x, 2), np.power(y, 2)))
 
 
-def _rotate_coordinates(v_old_cart, rotation):
-    c, s = np.cos(rotation), np.sin(rotation)
-    r_matrix = np.array(((c, -s), (s, c)))
-    v_new_cart = np.dot(r_matrix, v_old_cart)
-    return v_new_cart
-
-
 def _normalize_angle(angle):
     normalized = np.pi / 2 - angle
     if normalized < -np.pi:
@@ -57,8 +50,9 @@ def translate(v_old, distance, rotation):
     -----
         Angle should be measured clockwise and having value of 0 along vertical coordinate system axis.
     """
-    v_old_cart = _polar2cartesian(_normalize_polars(v_old))
-    v_new = _rotate_coordinates(v_old_cart, rotation)
+    r_old, theta_old = v_old
+    theta_new = _normalize_angle(theta_old) + rotation
+    v_new = _polar2cartesian((r_old, theta_new))
     v_new = np.subtract(v_new, [0, distance])
     r, theta = _cartesian2polar(v_new)
     theta = _normalize_angle(theta) if theta != 0 else 0
