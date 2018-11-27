@@ -28,7 +28,7 @@ class WS2811:
         if len(rgb) != 3:
             raise ValueError("Length of color must be 3, found {}".format(len(rgb)))
         for color in rgb:
-            if color not in range(0, 256):
+            if color not in range(256):
                 raise ValueError("Diode colors must be an iterable structure [r,g,b] for rgb in ranges 0,255")
         return True
 
