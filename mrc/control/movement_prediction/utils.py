@@ -24,6 +24,12 @@ def _normalize_polars(coords):
     return coords[0], _normalize_angle(coords[1])
 
 
+def sum_vectors(*vecs):
+    norm_vecs_c = [_polar2cartesian(_normalize_polars(vector)) for vector in vecs]
+    vec_res = np.sum(norm_vecs_c)
+    return _normalize_polars(_cartesian2polar(vec_res))
+
+
 def translate(v_old, distance, rotation):
     """Function recalculating position of old vector in new coordinate system
 
@@ -54,7 +60,7 @@ def translate(v_old, distance, rotation):
     return np.asarray((r, theta))
 
 
-def calculate(pos_prev, pos_current, coord_mov, timedelta):
+def calculate(pos_prev, pos_current, coord_mov):
     """Function calculating vector of movement between two positions in given time
 
     Parameters
@@ -66,15 +72,11 @@ def calculate(pos_prev, pos_current, coord_mov, timedelta):
     coord_mov : array-like
         Vector that coordinate system was translated by. It should have two fields, first one being distance,
         second being rotation.
-    timedelta : number
-        Amount of time passed between detecting current and old positions.
 
     Returns
     -------
     array-like
         Calculated vector of movement between given positions in new coordinate system.
-    float
-        Speed of movement between given positions, -1 if timeslot value was not provided.
 
     Notes
     -----
@@ -83,7 +85,5 @@ def calculate(pos_prev, pos_current, coord_mov, timedelta):
     distance, rotation = coord_mov
     pos_prev_c = _polar2cartesian(_normalize_polars(translate(pos_prev, distance, rotation)))
     pos_current_c = _polar2cartesian(_normalize_polars(pos_current))
-    print(pos_prev_c, pos_current_c)
     vector = _normalize_polars(_cartesian2polar(np.subtract(pos_current_c, pos_prev_c)))
-    speed = vector[0] / timedelta if timedelta != 0 else -1
-    return vector, speed
+    return vector
