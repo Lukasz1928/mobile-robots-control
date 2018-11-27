@@ -57,7 +57,7 @@ def translate_coordinate_system(v_old, distance, rotation):
         Results for all-zero input might result in undefined behavior.
     """
     r_old, theta_old = v_old
-    theta_new = _normalize_angle(theta_old) + rotation if r_old != 0 else 0
+    theta_new = _fit_angle_in_interval(_normalize_angle(theta_old) + rotation) if r_old != 0 else 0
     v_new = _polar2cartesian((r_old, theta_new))
     v_new = np.subtract(v_new, [0, distance])
     r, theta = _cartesian2polar(v_new)
