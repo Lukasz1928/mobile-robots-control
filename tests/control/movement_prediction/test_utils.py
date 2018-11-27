@@ -42,13 +42,6 @@ class TestUtils(TestCase):
         [2, 0],
         [4 * np.sqrt(2), np.deg2rad(45)],
     ]
-    timeslots = [
-        0,
-        10,
-        5,
-        0,
-        1.2,
-    ]
 
     @parameterized.expand(zip(old_vectors, translations, new_vectors))
     def test_translate(self, old_vector, translation, expected_vector):
@@ -57,12 +50,7 @@ class TestUtils(TestCase):
         actual_vector = (r, theta)
         np.testing.assert_almost_equal(expected_vector, actual_vector, decimal=1)
 
-    @parameterized.expand(zip(old_vectors, current_positions, movement_vectors, translations, timeslots))
-    def test_calculate(self, prev_pos, curr_pos, expected_v, translation, timeslot):
-        actual_vector, actual_speed = calculate(prev_pos, curr_pos, translation, timeslot)
+    @parameterized.expand(zip(old_vectors, current_positions, movement_vectors, translations))
+    def test_calculate(self, prev_pos, curr_pos, expected_v, translation):
+        actual_vector = calculate(prev_pos, curr_pos, translation)
         np.testing.assert_almost_equal(expected_v, actual_vector, decimal=1)
-        if timeslot == 0:
-            self.assertEqual(-1, actual_speed)
-        else:
-            r, _ = actual_vector
-            np.testing.assert_almost_equal(r / timeslot, actual_speed, decimal=1)

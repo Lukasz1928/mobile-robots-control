@@ -3,12 +3,12 @@ import numpy as np
 
 def _polar2cartesian(vector):
     r, theta = vector
-    return np.asarray([np.multiply(r, np.cos(theta)), np.multiply(r, np.sin(theta))])
+    return np.asarray([r * np.cos(theta), r * np.sin(theta)])
 
 
 def _cartesian2polar(vector):
     x, y = vector
-    return np.asarray([np.sqrt(np.add(np.power(x, 2), np.power(y, 2))), np.arctan2(y, x)])
+    return np.asarray([np.sqrt(x ** 2 + y ** 2), np.arctan2(y, x)])
 
 
 def _normalize_angle(angle):
