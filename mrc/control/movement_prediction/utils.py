@@ -11,13 +11,17 @@ def _cartesian2polar(vector):
     return np.asarray([np.sqrt(x ** 2 + y ** 2), np.arctan2(y, x)])
 
 
+def _fit_angle_in_interval(angle):
+    while angle <= -np.pi:
+        angle += 2 * np.pi
+    while angle > np.pi:
+        angle -= 2 * np.pi
+    return angle
+
+
 def _normalize_angle(angle):
     normalized = np.pi / 2 - angle
-    if normalized <= -np.pi:
-        normalized += 2 * np.pi
-    elif normalized > np.pi:
-        normalized -= 2 * np.pi
-    return normalized
+    return _fit_angle_in_interval(normalized)
 
 
 def _normalize_polars(coords):
@@ -30,7 +34,7 @@ def sum_vectors(*vecs):
     return _normalize_polars(_cartesian2polar(vec_res))
 
 
-def translate(v_old, distance, rotation):
+def translate_coordinate_system(v_old, distance, rotation):
     """Function recalculating position of old vector in new coordinate system
 
     Parameters
@@ -50,17 +54,18 @@ def translate(v_old, distance, rotation):
     Notes
     -----
         Angle should be measured clockwise and having value of 0 along vertical coordinate system axis.
+        Results for all-zero input might result in undefined behavior.
     """
     r_old, theta_old = v_old
     theta_new = _normalize_angle(theta_old) + rotation if r_old != 0 else 0
     v_new = _polar2cartesian((r_old, theta_new))
     v_new = np.subtract(v_new, [0, distance])
     r, theta = _cartesian2polar(v_new)
-    theta = _normalize_angle(theta) if theta != 0 else 0
+    theta = _normalize_angle(theta)
     return np.asarray((r, theta))
 
 
-def calculate(pos_prev, pos_current, coord_mov):
+def calculate_movement_vector(pos_prev, pos_current, coord_mov):
     """Function calculating vector of movement between two positions in given time
 
     Parameters
@@ -83,7 +88,7 @@ def calculate(pos_prev, pos_current, coord_mov):
         Angle should be measured clockwise and having value of 0 along vertical coordinate system axis.
     """
     distance, rotation = coord_mov
-    pos_prev_c = _polar2cartesian(_normalize_polars(translate(pos_prev, distance, rotation)))
+    pos_prev_c = _polar2cartesian(_normalize_polars(translate_coordinate_system(pos_prev, distance, rotation)))
     pos_current_c = _polar2cartesian(_normalize_polars(pos_current))
     vector = _normalize_polars(_cartesian2polar(np.subtract(pos_current_c, pos_prev_c)))
     return vector
