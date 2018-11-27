@@ -11,12 +11,14 @@ class WS2811:
         }
         self.spi_ch = spi_ch
         self.spi_speed = spi_speed
+        wiringpi.wiringPiSetupGpio()
+        wiringpi.wiringPiSPISetup(self.spi_ch, self.spi_speed)
 
     def __call__(self):
         self.send_color_via_spi()
 
     def __setitem__(self, key, value):
-        if type(value) is int and type in range(0, 256) and key in ['r,g,b']:
+        if type(value) is int and value in range(0, 256) and key in ['r,g,b']:
             self.rgb[key] = value
         else:
             raise ValueError("value must be from range 0-255 and keys must be from 'r','g','b'")
@@ -31,8 +33,6 @@ class WS2811:
         return True
 
     def send_color_via_spi(self):
-        wiringpi.wiringPiSetupGpio()
-        wiringpi.wiringPiSPISetup(self.spi_ch, self.spi_speed)
         values = [self.rgb['r'], self.rgb['g'], self.rgb['b']]
         wiringpi.wiringPiSPIDataRW(self.spi_ch, bytes(values))
 
