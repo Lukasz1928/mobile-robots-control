@@ -12,6 +12,6 @@ Module contents
 ---------------
 
 .. automodule:: mrc.localization.color
-:members:
-        :undoc-members:
-        :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:

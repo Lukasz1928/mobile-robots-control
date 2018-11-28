@@ -15,15 +15,15 @@ mrc.localization.locator module
 -------------------------------
 
 .. automodule:: mrc.localization.locator
-:members:
-        :undoc-members:
-        :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 
 Module contents
 ---------------
 
 .. automodule:: mrc.localization
-:members:
-        :undoc-members:
-        :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
