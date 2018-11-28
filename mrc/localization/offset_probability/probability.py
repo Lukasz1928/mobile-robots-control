@@ -3,16 +3,20 @@ import math
 from mrc.utils.maths import gauss_distribution
 
 
-class PositionPredictor:
-    def __init__(self, sigma, mu, coef):
-        self.mu = mu
-        self.sigma = sigma
+class AngularProbability:
+    def __init__(self, stdev, mean, coef):
+        self.mean = mean
+        self.stdev = stdev
         self.coef = coef
 
-    def __call__(self, rotation_angle):
-        return gauss_distribution(rotation_angle, self.mu, self.sigma)
+    def __call__(self, shift):
+        return gauss_distribution(shift, self.mean, self.stdev)
 
-    def rotate(self, rotation_angle):
-        self.mu = (self.mu + rotation_angle) % 2 * math.pi
-        self.sigma = self.coef * self.sigma
-        return gauss_distribution(rotation_angle, self.mu, self.sigma)
+    def rotate(self, shift):
+        mean = (self.mean + shift) % (2 * math.pi) - math.pi
+        if self.mean > math.pi:
+            self.mean = mean - 2 * math.pi
+        else:
+            self.mean = mean
+        self.stdev = self.coef * self.stdev
+        return gauss_distribution(shift, self.mean, self.stdev)
