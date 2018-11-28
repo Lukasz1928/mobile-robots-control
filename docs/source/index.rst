@@ -12,12 +12,3 @@ Welcome to Mobile Robots Control's documentation!
 
    readme_link
    mrc
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
