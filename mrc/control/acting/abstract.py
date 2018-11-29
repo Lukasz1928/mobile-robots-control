@@ -4,13 +4,13 @@ from abc import ABC, abstractmethod
 class AbstractStrategy(ABC):
 
     @abstractmethod
-    def read(self):
+    def read(self, **kwargs):
         raise NotImplementedError()
 
     @abstractmethod
-    def think(self):
+    def think(self, **kwargs):
         raise NotImplementedError()
 
     @abstractmethod
-    def act(self):
+    def act(self, **kwargs):
         raise NotImplementedError()
