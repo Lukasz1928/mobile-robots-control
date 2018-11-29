@@ -53,8 +53,10 @@ class TargetPositionCalculator:
         self._previous_position = current_position
         return target_position
 
-    def predict_further_target_position(self, current_position, movement, multiplier):
+    def predict_further_target_position(self, current_position, movement, multiplier=1):
         """Method for calculating target position, predicting master_unit further movement.
+
+        It adds master_unit movement vector (length multiplied by multiplier) to calculated actual target position.
 
         Parameters
         ----------
@@ -64,8 +66,8 @@ class TargetPositionCalculator:
         movement : (double, double)
             Vector describing robot's self movement from the previous position. It should have two fields,
             first one being radius, second being angle.
-        multiplier : double
-            pass
+        multiplier : :obj:`double`, optional
+            Value describing movement vector length modifier, default = 1.
 
         Returns
         -------
@@ -77,7 +79,11 @@ class TargetPositionCalculator:
         -----
             This method predicts master_unit further movement, based on its previous moves, and uses that to calculate
             target position in the nearest future.
+
+            Multiplier parameter should be used with value proportional to differences in time between last
+            and current measure - if previously master_unit movement was measured in N time, and now it's measured
+            in e.g. 1,2N time, multiplier should be 1,2. It should prevent our unit from going out of sync
+            with master_unit due to difference between timedeltas in previous and current measures.
         """
         target_position = self.calculate_actual_target_position(current_position, movement)
-        master_movement = calculate_movement_vector(self._previous_position, current_position, movement)
-        return sum_vectors(target_position, (master_movement[0] * multiplier, master_movement[1]))
+        return sum_vectors(target_position, (self._last_calculated[0] * multiplier, self._last_calculated[1]))

@@ -5,7 +5,7 @@ import numpy as np
 from parameterized import parameterized
 
 from mrc.control.movement_prediction.target_position_calculator import TargetPositionCalculator
-from mrc.control.movement_prediction.utils import sum_vectors, translate_coordinate_system, calculate_movement_vector
+from mrc.control.movement_prediction.utils import sum_vectors, translate_coordinate_system
 from tests.control.movement_prediction.common import old_vectors, current_positions, movement_vectors, translations, \
     new_vectors
 
@@ -30,7 +30,7 @@ class TestTargetPositionCalculator(TestCase):
         modified_target_position = translate_coordinate_system(self.configuration.target_position, 0, mov_v[1])
         self.target_position_calculator._previous_position = old_v
         actual_v = self.target_position_calculator.predict_further_target_position(curr_v, transl_v, multiplier)
-        master_movement = calculate_movement_vector(old_v, curr_v, transl_v)
+        master_movement = self.target_position_calculator._last_calculated
         np.testing.assert_almost_equal(
             sum_vectors(modified_target_position, curr_v, (master_movement[0] * multiplier, master_movement[1])),
             actual_v, decimal=1)
