@@ -1,4 +1,7 @@
+from random import random
+
 from mrc.control.acting.abstract import AbstractStrategy
+from mrc.control.steering.exceptions import ObstacleOnTheWayException, SteeringException
 
 
 class FollowMasterStrategy(AbstractStrategy):
@@ -9,18 +12,29 @@ class FollowMasterStrategy(AbstractStrategy):
         self.configurator = configurator
 
         self.locations = None
-        self.pos_to_go = None
+        self.target_position = None
+        self.position_reached = False
 
     def read(self):
         self.locations = self.locator.get_locations()
-        self.pos_to_go = self.configurator.target_position
+        self.target_position = self.configurator.target_position
 
     def think(self):
-        # dla całej mapy if i jest masterem
-        #   weź lokalizacja
-        #   wyznacz wektor ruchu mastera
-        #   oblicz pozycję docelową
-        pass
+        x = random.choice([True, False])
+        if x:  # TODO : getPositionFromMichal is not reached
+            self.position_reached = False
+            self.target_position = 5  # TODO: getFromMichal
+        else:
+            self.position_reached = True
+            self.target_position = 3
 
     def act(self):
-        pass
+        if not self.position_reached:
+            try:
+                self.steering_strategy.drive_to_point(self.target_position)
+            except ObstacleOnTheWayException as ootwe:
+                print(ootwe.message)
+            except SteeringException:
+                print("Nie da sie")
+        else:
+            print("Pojechalem jak szalony rozjezdzajac wszystko po drodze")
