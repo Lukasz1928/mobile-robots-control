@@ -20,6 +20,7 @@ class FollowMasterStrategy(AbstractStrategy):
         self.target_position = self.configurator.target_position
 
     def think(self):
+
         x = random.choice([True, False])
         if x:  # TODO : getPositionFromMichal is not reached
             self.position_reached = False
