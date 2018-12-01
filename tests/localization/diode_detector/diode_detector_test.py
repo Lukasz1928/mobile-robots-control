@@ -28,4 +28,3 @@ class TestDiodeDetectorSingleDiode(TestCase):
         self.assertEqual(len(keypoints), 1)
         self.assertAlmostEqual(keypoints[0].pt[0], self.expected_locations[image_id][0], delta=3)
         self.assertAlmostEqual(keypoints[0].pt[1], self.expected_locations[image_id][1], delta=3)
-
