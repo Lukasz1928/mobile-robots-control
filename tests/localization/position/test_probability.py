@@ -8,7 +8,7 @@ from parameterized import parameterized
 from mrc.localization.position.probability import AngularProbability
 
 
-class TestAngularProbablity(TestCase):
+class TestAngularProbability(TestCase):
 
     def setUp(self):
         self.angular_prob = AngularProbability(2 * math.pi / 10, 0, 3)
@@ -19,12 +19,19 @@ class TestAngularProbablity(TestCase):
         assert_almost_equal(self.angular_prob(self.angular_prob.mean + 0.5),
                             self.angular_prob(self.angular_prob.mean - 0.5), 3)
 
-    def test_calling(self):
-        assert_almost_equal(self.angular_prob(-math.pi), self.angular_prob(math.pi), 5)
-        assert_almost_equal(3 * self.angular_prob(-math.pi) / 2, self.angular_prob(math.pi), 5)
+    def test_calling_in_range(self):
+        assert_almost_equal(self.angular_prob(-math.pi), self.angular_prob(math.pi), 3)
+
+    def test_calling_out_of_range(self):
+        assert_almost_equal(self.angular_prob(3 * -math.pi), self.angular_prob(math.pi), 3)
 
     @parameterized.expand([[i] for i in np.linspace(-math.pi, math.pi, 10)])
     def test_shifting_for_real_cases(self, shift_angle):
         self.angular_prob.shift(shift_angle)
+        assert_almost_equal(self.angular_prob(self.angular_prob.mean + 0.5),
+                            self.angular_prob(self.angular_prob.mean - 0.5), 3)
+
+    def test_over_range(self):
+        self.angular_prob.shift(math.pi)
         assert_almost_equal(self.angular_prob(self.angular_prob.mean + 0.5),
                             self.angular_prob(self.angular_prob.mean - 0.5), 3)

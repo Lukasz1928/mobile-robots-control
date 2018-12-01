@@ -10,8 +10,10 @@ class AngularProbability:
         self.coef = coef
 
     def __call__(self, rotation):
-        result = gauss_distribution(rotation, self.mean, self.stdev)
-        return result
+        d = math.pi - self.mean
+        p1 = gauss_distribution(rotation, self.mean, self.stdev)
+        p2 = gauss_distribution(rotation, -math.pi - d, self.stdev)
+        return max(p1, p2)
 
     def reset(self):
         self.stdev /= self.coef
