@@ -1,53 +1,36 @@
-import warnings
 import cv2
-from mrc.localization.color.utils.color_conversion import hsv2grayscale
 
-
-class ColorEncodingNotSupportedException(Exception):
-    pass
+from mrc.localization.camera.utils.blob_detector import BlobDetector
+from mrc.localization.camera.utils.connected_components_detector import ConnectedComponentsDetector
+from mrc.localization.color.utils.color_converter import ColorConverter
 
 
 class DiodeDetector:
-    encoding_modifiers = {'BGR': [cv2.COLOR_BGR2GRAY], 'RGB': [cv2.COLOR_RGB2GRAY],
-                          'HSV': [cv2.COLOR_HSV2BGR, cv2.COLOR_BGR2GRAY]}
-    special_encoding_modifiers = {'HSV': [hsv2grayscale]}
 
-    def __init__(self, min_area=1, max_area=250):
-        self.detector = self.prepare_blob_detector(min_area, max_area)
+    def __init__(self, min_area=1, max_area=None):
+        self.blob_detector = BlobDetector(min_area, max_area)
+        self.connected_components_detector = ConnectedComponentsDetector()
+        self.color_converter = ColorConverter()
 
-    # if special -> search in special_encodings_modifiers
-    #   if found -> use found modifier
-    #   if not found -> search in encoding_modifier
-    # if not special -> use conversion from encoding_modifier
-    def detect(self, image, color_encoding='BGR', special=False):
-        if special and color_encoding in self.special_encoding_modifiers:
-            for conversion in self.special_encoding_modifiers[color_encoding]:
-                image = conversion(image)
-        else:
-            conversion_types = self._get_color_convertion_code(color_encoding, special)
-            for conversion in conversion_types:
-                image = cv2.cvtColor(image, conversion)
-        keypoints = self.detector.detect(image)
-        return keypoints
+    def detect(self, image, threshold=25, color_encoding='BGR'):
+        binary_image = self.color_converter.convert_to_binary(image, threshold, color_encoding)
+        keypoints = self.blob_detector.detect(binary_image)
+        stats, centroids = self.connected_components_detector.detect(binary_image)
+        for c in centroids:
+            cv2.circle(image, (int(c[0]), int(c[1])), 3, [255, 255, 255], -1)
+        for i in range(1, len(stats)):
+            cv2.rectangle(image, (stats[i, cv2.CC_STAT_LEFT], stats[i, cv2.CC_STAT_TOP]), (
+                stats[i, cv2.CC_STAT_LEFT] + stats[i, cv2.CC_STAT_WIDTH],
+                stats[i, cv2.CC_STAT_TOP] + stats[i, cv2.CC_STAT_HEIGHT]),
+                          [255, 255, 255])
+        cv2.imshow('a', image)
+        cv2.waitKey(0)
+        return None
 
-    def _get_color_convertion_code(self, color_encoding, fast):
-        if color_encoding not in self.encoding_modifiers:
-            raise ColorEncodingNotSupportedException(
-                "{} color encoding is not supported. Supported encodings are {}".format(color_encoding,
-                                                                                        self.encoding_modifiers.keys()))
-        return self.encoding_modifiers[color_encoding]
+    def _detect_diodes(self, keypoints, connected_components):
+        pass
 
-    @staticmethod
-    def prepare_blob_detector(min_area, max_area):
-        params = cv2.SimpleBlobDetector_Params()
-        params.filterByColor = True
-        params.blobColor = 255
-        params.filterByCircularity = True
-        params.minCircularity = 0.4
-        params.filterByInertia = False
-        params.filterByConvexity = False
-        params.filterByArea = True
-        params.maxArea = max_area
-        params.minArea = min_area
-        detector = cv2.SimpleBlobDetector_create(params)
-        return detector
+
+img = cv2.imread('C:/Users/Lukasz1928/Desktop/chainer-spike/data/close.png')
+d = DiodeDetector()
+d.detect(img)
