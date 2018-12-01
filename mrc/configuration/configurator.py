@@ -11,12 +11,17 @@ class Configurator:
         master_unit : Any
             ID of master unit. It has to be compatible with locator.
         target_position : (double, double)
-            qwerty
+            Target position relative to master unit. First field is distance, second is angle.
         identity : Any
             ID of robot. It has to be compatible with locator.
         set_external_identity : :obj:`Any -> Any`, optional
             Optional function responsible for changing robot identity outside `Configurator`.
             It has to accept `identity` as its only argument.
+
+        Notes
+        -----
+        Master unit is the robot that the one the program is running on is supposed to follow.
+
         """
         self.master_unit = master_unit
         self.target_position = target_position
