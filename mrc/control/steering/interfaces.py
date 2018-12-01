@@ -1,10 +1,11 @@
-from mrc.control.steering.abstract import AbstractDTPSteeringStrategy
+from mrc.control.steering.abstract import AbstractDTPSteeringInterface
 from mrc.control.steering.exceptions import ObstacleOnTheWayException
 
 
-class CarefulDTPSteeringStrategy(AbstractDTPSteeringStrategy):
+class CarefulDTPSteeringInterface(AbstractDTPSteeringInterface):
 
     def __init__(self, motor_driver):
+        self.master = None
         self.all_robots_position = None
         self.motor_driver = motor_driver
 
@@ -12,9 +13,10 @@ class CarefulDTPSteeringStrategy(AbstractDTPSteeringStrategy):
         r, theta = target_point
         res = []
         for (name, pos) in self.all_robots_position.values():
-            r_i, theta_i = pos
-            if r_i < r / 2 and theta_i - 0.17 < theta < theta_i + 0.17:
-                res.append(name)
+            if name != self.master:
+                r_i, theta_i = pos
+                if r_i < r / 2 and theta_i - 0.17 < theta < theta_i + 0.17:
+                    res.append(name)
         return bool(len(res)), res
 
     def drive_to_point(self, point):
@@ -24,11 +26,12 @@ class CarefulDTPSteeringStrategy(AbstractDTPSteeringStrategy):
         else:
             self.motor_driver.drive_to_point(point)
 
-    def update_data(self, *kwargs):
-        self.all_robots_position = kwargs['positions']
+    def update_data(self, positions, master):
+        self.all_robots_position = positions
+        self.master = master
 
 
-class SimpleDTPSteeringStrategy(AbstractDTPSteeringStrategy):
+class SimpleDTPSteeringInterface(AbstractDTPSteeringInterface):
 
     def __init__(self, motor_driver):
         self.all_robots_position = None
@@ -37,5 +40,5 @@ class SimpleDTPSteeringStrategy(AbstractDTPSteeringStrategy):
     def drive_to_point(self, point):
         self.motor_driver.drive_to_point(point)
 
-    def update_data(self, **kwargs):
-        self.all_robots_position = kwargs['positions']
+    def update_data(self, positions):
+        self.all_robots_position = positions

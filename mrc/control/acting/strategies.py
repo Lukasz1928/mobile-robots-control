@@ -6,8 +6,8 @@ from mrc.shared.position import PolarPosition
 
 class FollowMasterStrategy(AbstractStrategy):
 
-    def __init__(self, steering_strategy, locator, configurator):
-        self.steering_strategy = steering_strategy
+    def __init__(self, steering_interface, locator, configurator):
+        self.steering_interface = steering_interface
         self.locator = locator
         self.configurator = configurator
         self.position_calculator = TargetPositionCalculator(self.configurator)
@@ -17,8 +17,8 @@ class FollowMasterStrategy(AbstractStrategy):
         self.driving = False
 
     def read(self):
+        self.locations = self.locator.get_locations(None)
         if self.step_reached:
-            self.locations = self.locator.get_locations(None)
             master_position = self.locator.get_locations(self.configurator.master_unit)
             self.current_step = self.position_calculator.calculate_actual_target_position(master_position,
                                                                                           self.current_step)
@@ -32,7 +32,8 @@ class FollowMasterStrategy(AbstractStrategy):
     def act(self):
         if not self.step_reached and not self.driving:
             try:
-                self.steering_strategy.drive_to_point(self.current_step)
+                self.steering_interface.update_data(locations=self.locations, master=self.configurator.master_unit)
+                self.steering_interface.drive_to_point(self.current_step)
                 self.driving = True
             except ObstacleOnTheWayException as ootwe:
                 print(ootwe.message)

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class AbstractDTPSteeringStrategy(ABC):
+class AbstractDTPSteeringInterface(ABC):
 
     @abstractmethod
     def drive_to_point(self, point):
