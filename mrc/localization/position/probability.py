@@ -23,4 +23,4 @@ class AngularProbability:
         else:
             self.mean = mean
         self.stdev = self.coef * self.stdev
-        return gauss_distribution(rotation, self.mean, self.stdev) / self.mean
+        return gauss_distribution(rotation, self.mean, self.stdev)
