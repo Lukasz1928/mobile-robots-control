@@ -29,8 +29,21 @@ def _normalize_polars(coords):
 
 
 def sum_vectors(*vecs):
+    """
+    Returns sum of input polar coordinates vectors, in format used by library.
+
+    Parameters
+    ----------
+    *vecs
+        Variable length list of (double, double) array-likes, where first field is distance, second is radius.
+
+    Returns
+    -------
+    (double, double)
+        Vector, where first field is distance, second is radius.
+    """
     norm_vecs_c = [_polar2cartesian(_normalize_polars(vector)) for vector in vecs]
-    vec_res = np.sum(norm_vecs_c)
+    vec_res = np.sum(norm_vecs_c, axis=0)
     return _normalize_polars(_cartesian2polar(vec_res))
 
 
@@ -70,25 +83,28 @@ def calculate_movement_vector(pos_prev, pos_current, coord_mov):
 
     Parameters
     ----------
-    pos_prev : array-like
+    pos_prev : (double, double)
         Previous position. It should have two fields, first one being radius, second being angle.
-    pos_current : array-like
+    pos_current : (double, double)
         Current position. It should have two fields, first one being radius, second being angle.
-    coord_mov : array-like
+    coord_mov : (double, double)
         Vector that coordinate system was translated by. It should have two fields, first one being distance,
         second being rotation.
 
     Returns
     -------
-    array-like
-        Calculated vector of movement between given positions in new coordinate system.
+    (double, double)
+        Calculated vector of movement between given positions in new coordinate system. It will have two fields,
+        first one being distance, second being rotation.
 
     Notes
     -----
         Angle should be measured clockwise and having value of 0 along vertical coordinate system axis.
     """
     distance, rotation = coord_mov
-    pos_prev_c = _polar2cartesian(_normalize_polars(translate_coordinate_system(pos_prev, distance, rotation)))
+    pos_prev_c = _polar2cartesian(_normalize_polars(
+        translate_coordinate_system(pos_prev, distance, rotation))) if pos_prev is not None \
+        else _polar2cartesian(_normalize_polars(pos_current))
     pos_current_c = _polar2cartesian(_normalize_polars(pos_current))
     vector = _normalize_polars(_cartesian2polar(np.subtract(pos_current_c, pos_prev_c)))
     return vector

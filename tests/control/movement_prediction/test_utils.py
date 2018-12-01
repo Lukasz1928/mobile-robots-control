@@ -3,46 +3,12 @@ from unittest import TestCase
 import numpy as np
 from parameterized import parameterized
 
-from mrc.control.movement_prediction.utils import translate_coordinate_system, calculate_movement_vector
+from mrc.control.movement_prediction.utils import translate_coordinate_system, calculate_movement_vector, sum_vectors
+from tests.control.movement_prediction.common import old_vectors, translations, new_vectors, current_positions, \
+    movement_vectors, sum_of_vectors
 
 
 class TestUtils(TestCase):
-    old_vectors = [
-        [1, 0],
-        [0, 0],
-        [2 * np.sqrt(2), np.deg2rad(45)],
-        [2 * np.sqrt(2), np.deg2rad(-90)],
-        [3, np.deg2rad(135)],
-    ]
-    translations = [
-        [0, 0],
-        [2, 0],
-        [2, np.deg2rad(90)],
-        [2, np.deg2rad(-45)],
-        [3, np.deg2rad(-135)],
-    ]
-    new_vectors = [
-        [1, 0],
-        [2, np.deg2rad(180)],
-        [2, np.deg2rad(-90)],
-        [2, np.deg2rad(-90)],
-        [3 * np.sqrt(2), np.deg2rad(-135)],
-    ]
-    current_positions = [
-        [4, 0],
-        [2, np.deg2rad(90)],
-        [1, np.deg2rad(-90)],
-        [2 * np.sqrt(2), np.deg2rad(-45)],
-        [np.sqrt(2), np.deg2rad(45)],
-    ]
-    movement_vectors = [
-        [3, 0],
-        [2 * np.sqrt(2), np.deg2rad(45)],
-        [1, np.deg2rad(90)],
-        [2, 0],
-        [4 * np.sqrt(2), np.deg2rad(45)],
-    ]
-
     @parameterized.expand(zip(old_vectors, translations, new_vectors))
     def test_translate(self, old_vector, translation, expected_vector):
         distance, rotation = translation
@@ -54,3 +20,8 @@ class TestUtils(TestCase):
     def test_calculate(self, prev_pos, curr_pos, expected_v, translation):
         actual_vector = calculate_movement_vector(prev_pos, curr_pos, translation)
         np.testing.assert_almost_equal(expected_v, actual_vector, decimal=1)
+
+    @parameterized.expand(zip(old_vectors, new_vectors, sum_of_vectors))
+    def test_sum_vectors(self, v1, v2, expected):
+        actual = sum_vectors(v1, v2)
+        np.testing.assert_almost_equal(expected, actual, decimal=1)
