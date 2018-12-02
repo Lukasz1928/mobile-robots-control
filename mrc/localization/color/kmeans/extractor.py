@@ -2,10 +2,37 @@ import cv2
 
 
 class Extractor:
+    """
+    Class responsible for extracting all colors in whole image.
+
+    Intended for internal usage.
+    """
+
     def __init__(self, analyser):
+        """
+        Parameters
+        ----------
+        analyser : `mrc.localization.color.kmeans.Analyser`
+            Instance of Analyser.
+        """
         self.analyser = analyser
 
     def extract(self, image, blob_coordinates):
+        """
+        Function extracting colors from image in given blob coordinates.
+
+        Parameters
+        ----------
+        image : `ndarray`
+            Numpy array representing BGR image.
+        blob_coordinates : ((`float`, `float`), `float`)
+            ((x, y), r), where (x,y) are coordinates of blob centers and r is their radius.
+
+        Returns
+        -------
+        `list` of `str`
+            List of color names.
+        """
         _image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         return [self._execute_analysis(chunk) for chunk in self._chop_blobs(_image, blob_coordinates)]
 
