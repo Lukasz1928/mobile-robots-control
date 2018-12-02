@@ -43,5 +43,6 @@ class FollowMasterStrategy(AbstractStrategy):
                 self.driving = False
         elif self.step_reached and self.driving:
             self.driving = False
+            print("Dojechalem")
         else:  # We did not reach the step and still driving
             print("Pyr pyr.")

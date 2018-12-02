@@ -24,10 +24,10 @@ class CarefulDTPSteeringInterface(AbstractDTPSteeringInterface):
         if sth_in_route:
             raise ObstacleOnTheWayException("The path is blocked by robots: " + str(names))
         else:
-            self.motor_driver.drive_to_point(point)
+            self.motor_driver.drive_to_point(*point)
 
-    def update_data(self, positions, master):
-        self.all_robots_position = positions
+    def update_data(self, locations, master):
+        self.all_robots_position = locations
         self.master = master
 
 
@@ -36,9 +36,11 @@ class SimpleDTPSteeringInterface(AbstractDTPSteeringInterface):
     def __init__(self, motor_driver):
         self.all_robots_position = None
         self.motor_driver = motor_driver
+        self.master = None
 
     def drive_to_point(self, point):
-        self.motor_driver.drive_to_point(point)
+        self.motor_driver.drive_to_point(*point)
 
-    def update_data(self, positions):
-        self.all_robots_position = positions
+    def update_data(self, locations, master):
+        self.all_robots_position = locations
+        self.master = master
