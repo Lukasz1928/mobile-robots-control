@@ -15,7 +15,7 @@ class TestBlobDetectorNoBlob(TestCase):
         self.detector = BlobDetector()
         self.color_converter = ColorConverter()
         self.image = self.color_converter.convert_to_grayscale(
-            read_image('localization/diode_detection/blobs/no_blob/1.jpg'))
+            read_image('localization/diode_detection/blobs/no_blob/1.png'))
 
     def test_detect(self):
         blobs = self.detector.detect(self.image)
@@ -27,7 +27,7 @@ class TestBlobDetectorSingleBlob(TestCase):
         self.detector = BlobDetector(min_area=5)
         self.color_converter = ColorConverter()
         self.images = [self.color_converter.convert_to_grayscale(
-            read_image('localization/diode_detection/blobs/single_blob/{}.jpg'.format(i))) for i in range(1, 10)]
+            read_image('localization/diode_detection/blobs/single_blob/{}.png'.format(i))) for i in range(1, 10)]
         self.expected_locations = single_expected_locations
 
     @parameterized.expand([[i] for i in range(9)])
