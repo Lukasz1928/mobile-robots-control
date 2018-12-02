@@ -47,7 +47,7 @@ class Analyser:
         Parameters
         ----------
         image_chunk : :obj:`ndarray`
-            Fragment of RGB image read by using OpenCV
+            Array representing fragment of RGB image
 
         Returns
         -------
@@ -62,5 +62,6 @@ class Analyser:
 
     def _color_analysis(self, hsv_pixel) -> dict:
         hue, _, _ = hsv_pixel
-        return {color_val.name: self._resolving_predicate(hue, color_val.value) for color_val in
+        return {color_val.name: self._resolving_predicate(hue, (color_val.value[0], color_val.value[-1])) for color_val
+                in
                 self._color_values}

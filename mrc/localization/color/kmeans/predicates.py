@@ -14,7 +14,7 @@ class GaussianHSVPredicate:
         ----------
         hue : `int`
             Value of hue (from HSV color model), range in [0, 360).
-        range_ : `range`
+        range_ : (`int`, `int`)
             Range of one color to fit hue to.
 
         Returns
