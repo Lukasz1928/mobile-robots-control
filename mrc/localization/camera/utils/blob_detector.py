@@ -1,7 +1,5 @@
 import cv2
 from mrc.shared.exceptions.exceptions import IncorrectShapeException
-from tests.test_utils.read_image import read_image
-from tests.resources.localization.diode_detection.blobs.multiple_blobs.expected_locations import expected_locations as multiple_expected_locations
 
 
 class BlobDetector:
@@ -23,7 +21,7 @@ class BlobDetector:
         params.filterByInertia = False
         params.filterByConvexity = False
         params.minThreshold = int(0.4 * 255)
-        params.maxThreshold = int(0.99 * 255)
+        params.maxThreshold = int(255)
         params.thresholdStep = 10
         if min_area is not None or max_area is not None:
             params.filterByArea = True

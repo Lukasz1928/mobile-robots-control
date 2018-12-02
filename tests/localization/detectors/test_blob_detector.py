@@ -24,7 +24,7 @@ class TestBlobDetectorNoBlob(TestCase):
 
 class TestBlobDetectorSingleBlob(TestCase):
     def setUp(self):
-        self.detector = BlobDetector(min_area=1)
+        self.detector = BlobDetector(min_area=5)
         self.color_converter = ColorConverter()
         self.images = [self.color_converter.convert_to_grayscale(
             read_image('localization/diode_detection/blobs/single_blob/{}.jpg'.format(i))) for i in range(1, 10)]
@@ -41,7 +41,7 @@ class TestBlobDetectorSingleBlob(TestCase):
 
 class TestBlobDetectorMultipleBlobs(TestCase):
     def setUp(self):
-        self.detector = BlobDetector(min_area=1)
+        self.detector = BlobDetector(min_area=5)
         self.color_converter = ColorConverter()
         self.images = [self.color_converter.convert_to_grayscale(
             read_image('localization/diode_detection/blobs/multiple_blobs/{}.png'.format(i))) for i in range(1, 10)]
