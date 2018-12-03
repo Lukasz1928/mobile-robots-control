@@ -1,7 +1,8 @@
 import math
 from operator import itemgetter
-import matplotlib.pyplot as plt
+
 import cv2
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 
@@ -57,6 +58,7 @@ class ParamsGenerator:
         gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
         leds_image = cv2.inRange(gray_image, 225, 255)
         kpts = ParamsGenerator._prepare_blob_detector().detect(leds_image)
+        # print([x.pt for x in kpts])
         if len(kpts) > 0:
             return kpts[0].pt
         return None
@@ -100,14 +102,13 @@ def normalize_point(point, resolution, rx, ry=None):
     image_centre = (resolution[0] // 2, resolution[1] // 2)
     point_vector = [image_centre[0] - point[0], point[1] - image_centre[1]]
     npv = [point_vector[0] / ry, point_vector[1] / rx]
-    length = math.sqrt(npv[0]**2+npv[1]**2)
+    length = math.sqrt(npv[0] ** 2 + npv[1] ** 2)
     return length
-
 
 
 # polynomial calculation
 real_distances = [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6, 7, -7, 8, -8, 9, -9, 10, -10, 11, -11, 12, -12, 13, -13]
-real_angles = [math.atan(abs(x)/6) for x in real_distances]
+real_angles = [math.atan(abs(x) / 6) for x in real_distances]
 
 points = [[320, 240],
           [282, 239], [357, 240],
@@ -124,12 +125,14 @@ points = [[320, 240],
           [95, 248], [541, 245],
           [90, 249], [545, 245]]
 
+lengths = [normalize_point(p, (640, 480), 320 - 47) for p in points]
 
-lengths = [normalize_point(p, (640, 480), 320-47, (320-47) * (480 / 640)) for p in points]
+
+# lengths = [normalize_point(p, (640, 480), 320 - 47, (320 - 47) * (480 / 640)) for p in points]
 
 
-def f(x, a, b, c, d):
-    return a*x**4 + b*x**3 + c*x**2 + d*x
+def f(x, a, b, c):
+    return a * x ** 4 + b * x ** 3 + c * x ** 2 + (np.pi / 2 - a - b - c) * x
 
 
 print('lengths: ' + str(lengths))
@@ -140,7 +143,7 @@ ys = [f(x, *coef) for x in xs]
 plt.plot(xs, ys)
 plt.show()
 calculated_angles = []
-lengths = [normalize_point(p, (640, 480), 320-47, (320-47)) for p in [[423, 376]]]
+# lengths = [normalize_point(p, (640, 480), 320 - 47, (320 - 47)) for p in [[423, 376]]]
 for l in lengths:
     angle = f(l, *coef)
     calculated_angles.append(angle)
@@ -152,28 +155,39 @@ print('calculated angles: ' + str(calculated_angles))
 print('real angles: ' + str(real_angles))
 print('calculated distances: ' + str(calculated_distances))
 print('real distances: ' + str([abs(x) for x in real_distances]))
+angle_diff = [abs(abs(a) - abs(b)) for a, b in zip(calculated_angles, real_angles)]
+dist_diff = [abs(abs(a) - abs(b)) for a, b in zip(calculated_distances, real_distances)]
+print('angle differences: ' + str(angle_diff))
+print('dist differences: ' + str(dist_diff))
+# plt.plot(angle_diff)
+# plt.show()
+# plt.plot(dist_diff)
+# plt.show()
 
-exit()
+# exit()
 # Test
 print("#######################################################################################")
 real_locs = [(250, 440), (330, 130), (400, 310), (510, 440), (480, 190), (520, 90), (580, 150), (660, 400), (430, 20)]
-rel_locs = [((a-40+18)/10, (b-300+5)/10) for (a, b) in real_locs]
-real_dist = [math.sqrt(u**2+v**2) for (u, v) in rel_locs]
+# real_locs = [(250, 440), (330, 130), (400, 310), (510, 440), (480, 190), (520, 90), (580, 150), (660, 400), (430, 20)]
+rel_locs = [((a - 40 + 18) / 10, (b - 300 + 5) / 10) for (a, b) in real_locs]
+real_dist = [math.sqrt(u ** 2 + v ** 2) for (u, v) in rel_locs]
 print('real dist: ' + str(real_dist))
 
-
-path = "C:/Users/Lukasz1928/Desktop/inz/pomiary/probe_2/"
-imgs = [cv2.imread('{}{}.jpg'.format(path, i)) for i in range(1, 10)]
+path = "C:/Users/micza_000/Pictures/rpi_camera/probe_2/fixed/"  # TODO: change path according to you computer
+imgs = [cv2.imread('{}{}.jpg'.format(path, i)) for i in (1, 2, 3, 4, 5, 6, 7, 9, 10)]
 shapes = [img.shape for img in imgs]
 diodes_in_photo = [ParamsGenerator._find_diode(img) for img in imgs]
-photo_centre = [750//2, 750//2]
-circle_radius = math.sqrt((750/2 - 93)**2+(750/2 - 75)**2)
+# print(diodes_in_photo)
+photo_centre = [750 // 2, 750 // 2]
+circle_radius = math.sqrt((750 / 2 - 93) ** 2 + (750 / 2 - 75) ** 2)
 radiuses = []
 for i in range(len(diodes_in_photo)):
-    nd = normalize_point(diodes_in_photo[i], (750, 750), circle_radius, circle_radius * 480/640)
+    nd = normalize_point(diodes_in_photo[i], (750, 750), circle_radius)
     radiuses.append(nd)
 print('radiuses: ' + str(radiuses))
 angles = [f(x, *coef) for x in radiuses]
 print('angles: ' + str(angles))
-calc_distances = [(185-37)/10 * math.tan(a) for a in angles]
+calc_distances = [(185 - 37) / 10 * math.tan(a) for a in angles]
 print('calc dist: ' + str(calc_distances))
+calc_diff = [abs(abs(a) - abs(b)) for a, b in zip(real_dist, calc_distances)]
+print('calc diff:' + str(calc_diff))
