@@ -3,12 +3,13 @@ from unittest import TestCase
 import cv2
 from parameterized import parameterized
 from mrc.localization.camera.utils.connected_components_detector import ConnectedComponentsDetector
-from tests.test_utils.list_utils import list_contains_almost_equal, list_difference, lists_almost_equal
+from tests.test_utils.list_utils import list_contains_almost_equal, list_difference, lists_almost_equal, \
+    tuples_almost_equal
 from tests.test_utils.read_image import read_image
 from mrc.localization.color.utils.color_converter import ColorConverter
-from tests.resources.localization.diode_detection.blobs.multiple_blobs.expected_locations import \
-    expected_locations as multiple_expected_locations
-from tests.resources.localization.diode_detection.blobs.single_blob.expected_locations import \
+from tests.resources.localization.diode_detection.components.blobs.multiple_blobs.data import \
+    expected_locations as multiple_expected_locations, expected_locations_multiple_components
+from tests.resources.localization.diode_detection.components.blobs.single_blob.data import \
     expected_locations as single_expected_locations
 from tests.resources.localization.diode_detection.components.background.data import stats, centroids
 
@@ -74,7 +75,7 @@ class TestConnectedComponentsDetectorBasic(TestCase):
     def test_detect_stats(self, image_id):
         img = self.images[image_id]
         s, _ = self.detector.detect(img)
-        # TODO
+        self.assertTrue(lists_almost_equal(s, self.stats[image_id + 1], 5, 4))
 
 
 class TestConnectedComponentsDetectorSingleComponent(TestCase):
@@ -85,27 +86,42 @@ class TestConnectedComponentsDetectorSingleComponent(TestCase):
             read_image('localization/diode_detection/blobs/single_blob/{}.png'.format(i)), 10) for i in range(1, 10)]
         self.expected_locations = single_expected_locations
 
-    # TODO
     @parameterized.expand([[i] for i in range(9)])
     def test_detect(self, image_id):
-        s, c = self.detector.detect(self.images[0])
-        self.assertTrue(True)
-        # img = self.images[image_id]
-        # stats, centroids = self.detector.detect(img)
-        # a = read_image('localization/diode_detection/blobs/single_blob/{}.png'.format(image_id + 1))
-        # # print(len(centroids), len(stats))
-        # for c in centroids:
-        #     cv2.circle(a, (int(c[0]), int(c[1])), 3, [255, 255, 255], -1)
-        # cv2.imshow('a', a)
-        # cv2.waitKey(0)
-        # for i in range(0, len(stats)):
-        #     print(stats[i])
-        #     cv2.rectangle(a, (stats[i][cv2.CC_STAT_LEFT], stats[i][cv2.CC_STAT_TOP]), (
-        #         stats[i][cv2.CC_STAT_LEFT] + stats[i][cv2.CC_STAT_WIDTH], stats[i][cv2.CC_STAT_TOP] + stats[i][cv2.CC_STAT_HEIGHT]),
-        #                   [255, 255, 255])
-        # cv2.imshow('rect', a)
-        # cv2.waitKey(0)
+        s, c = self.detector.detect(self.images[image_id])
+        self.assertEqual(len(s), 1)
+        self.assertEqual(len(c), 1)
+        self.assertTrue(tuples_almost_equal(c[0], self.expected_locations[image_id], 4, 2))
 
-        # self.assertEqual(len(stats), 1)
-        # self.assertEqual(len(centroids), 1)
-        # self.assertTrue(list_contains_almost_equal(self.expected_locations[image_id], centroids, 4))
+
+class TestConnectedComponentsDetectorSingleComponentMoreBlobs(TestCase):
+    def setUp(self):
+        self.detector = ConnectedComponentsDetector()
+        self.color_converter = ColorConverter()
+        self.images = [self.color_converter.convert_to_binary(
+            read_image('localization/diode_detection/blobs/multiple_blobs/{}.png'.format(i)), 10) for i in range(1, 10)]
+        self.expected_locations = multiple_expected_locations
+
+    @parameterized.expand([[i] for i in range(9)])
+    def test_detect_single_diode(self, image_id):
+        s, c = self.detector.detect(self.images[image_id])
+        self.assertEqual(len(s), len(self.expected_locations[image_id]))
+        self.assertEqual(len(c), len(self.expected_locations[image_id]))
+        self.assertTrue(lists_almost_equal(c, self.expected_locations[image_id], 4))
+
+
+class TestConnectedComponentsDetectorMultipleComponents(TestCase):
+    def setUp(self):
+        self.detector = ConnectedComponentsDetector()
+        self.color_converter = ColorConverter()
+        self.images = [self.color_converter.convert_to_binary(
+            read_image('localization/diode_detection/components/blobs/multiple_blobs/{}.png'.format(i)), 10) for i in
+            range(1, 3)]
+        self.expected_locations = expected_locations_multiple_components
+
+    @parameterized.expand([[i] for i in range(2)])
+    def test_detect_single_diode(self, image_id):
+        s, c = self.detector.detect(self.images[image_id])
+        self.assertEqual(len(s), len(self.expected_locations[image_id + 1]))
+        self.assertEqual(len(c), len(self.expected_locations[image_id + 1]))
+        self.assertTrue(lists_almost_equal(c, self.expected_locations[image_id + 1], 4))

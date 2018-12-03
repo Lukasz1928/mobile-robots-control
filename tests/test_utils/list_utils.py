@@ -1,7 +1,7 @@
 import itertools
 
 
-def _tuples_almost_equal(t1, t2, delta, places):
+def tuples_almost_equal(t1, t2, delta, places):
     for i in range(places):
         if abs(t1[i] - t2[i]) > delta:
             return False
@@ -18,7 +18,7 @@ def lists_almost_equal(list1, list2, delta, places=None):
     places = places if places is not None else len(list1[0])
     for p in itertools.permutations(list2):
         for i, elem in enumerate(p):
-            if not _tuples_almost_equal(list1[i], elem, delta, places):
+            if not tuples_almost_equal(list1[i], elem, delta, places):
                 break
         else:
             return True
