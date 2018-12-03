@@ -7,7 +7,7 @@ from tests.resources.localization.diode_detection.blobs.multiple_blobs.expected_
 from tests.resources.localization.diode_detection.blobs.single_blob.expected_locations import \
     expected_locations as single_expected_locations
 from tests.test_utils.read_image import read_image
-from tests.test_utils.list_utils import list_contains_almost
+from tests.test_utils.list_utils import list_contains_almost_equal
 
 
 class TestBlobDetectorNoBlob(TestCase):
@@ -52,4 +52,4 @@ class TestBlobDetectorMultipleBlobs(TestCase):
         img = self.images[image_id]
         blobs = self.detector.detect(img)
         self.assertGreaterEqual(len(blobs), 1)
-        self.assertTrue(list_contains_almost(self.expected_locations[image_id], [b.pt for b in blobs], 5))
+        self.assertTrue(list_contains_almost_equal(self.expected_locations[image_id], [b.pt for b in blobs], 5))
