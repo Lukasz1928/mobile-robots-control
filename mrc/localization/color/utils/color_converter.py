@@ -2,10 +2,6 @@ import cv2
 from mrc.shared.exceptions.exceptions import ColorEncodingNotSupportedException
 
 
-def hsv2grayscale(image):
-    return image[:, :, 2]
-
-
 class ColorConverter:
 
     encoding_modifiers = {'BGR': [cv2.COLOR_BGR2GRAY], 'RGB': [cv2.COLOR_RGB2GRAY]}
