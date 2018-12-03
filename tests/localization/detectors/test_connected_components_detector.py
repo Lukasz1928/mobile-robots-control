@@ -74,7 +74,7 @@ class TestConnectedComponentsDetectorBasic(TestCase):
     def test_detect_stats(self, image_id):
         img = self.images[image_id]
         s, _ = self.detector.detect(img)
-        print(lists_almost_equal(s, self.stats[image_id + 1], 5, 4))
+        # TODO
 
 
 class TestConnectedComponentsDetectorSingleComponent(TestCase):
@@ -85,17 +85,10 @@ class TestConnectedComponentsDetectorSingleComponent(TestCase):
             read_image('localization/diode_detection/blobs/single_blob/{}.png'.format(i)), 10) for i in range(1, 10)]
         self.expected_locations = single_expected_locations
 
-
-    @parameterized.expand([[i] for i in range(1)])
+    # TODO
+    @parameterized.expand([[i] for i in range(9)])
     def test_detect(self, image_id):
         s, c = self.detector.detect(self.images[0])
-        img = read_image('localization/diode_detection/blobs/single_blob/{}.png'.format(1))
-        for _c in c:
-            cv2.circle(img, (int(_c[0]), int(_c[1])), 3, [255, 255, 255], -1)
-        cv2.imshow('a', img)
-        cv2.waitKey(0)
-        print('')
-        print(s, c)
         self.assertTrue(True)
         # img = self.images[image_id]
         # stats, centroids = self.detector.detect(img)

@@ -13,18 +13,6 @@ class ConnectedComponentsDetector:
 
     def detect(self, image, remove_background=True, remove_irrelevant=True):
         num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(image)
-        # cv2.imshow('a', image)
-        # cv2.waitKey(0)
-        # a = read_image('localization/diode_detection/blobs/single_blob/{}.png'.format(1))
-        # for i, s in enumerate(stats):
-        #     print(centroids[i], s[cv2.CC_STAT_LEFT], s[cv2.CC_STAT_TOP], s[cv2.CC_STAT_WIDTH], s[cv2.CC_STAT_HEIGHT],
-        #           s[cv2.CC_STAT_WIDTH] * s[cv2.CC_STAT_HEIGHT])
-        # cv2.imwrite('yyy.png', image)
-        # print('')
-        # print(len(centroids))
-        # for c in centroids:
-        #     cv2.circle(a, (int(c[0]), int(c[1])), 3, [255, 255, 255], -1)
-        # cv2.imwrite('xxx.png', a)
         stats_list = stats.tolist()
         centroids_list = centroids.tolist()
         if remove_background:
@@ -35,11 +23,6 @@ class ConnectedComponentsDetector:
             irrelevant_indexes = self._get_irrelevant_components_indexes(stats, centroids, 500, 25)
             stats_list = [stats_list[i] for i in range(len(stats_list)) if i not in irrelevant_indexes]
             centroids_list = [centroids_list[i] for i in range(len(centroids_list)) if i not in irrelevant_indexes]
-        # a = read_image('localization/diode_detection/blobs/single_blob/{}.png'.format(1))
-        # cv2.imwrite('ppp.png', image)
-        # for c in centroids_list:
-        #     cv2.circle(a, (int(c[0]), int(c[1])), 3, [255, 255, 255], -1)
-        # cv2.imwrite('qqq.png', a)
         return stats_list, centroids_list
 
     def _get_background_component_index(self, image, stats, centroids):
@@ -50,7 +33,6 @@ class ConnectedComponentsDetector:
         distances_to_centre = [points_2d_sqr_distance(image_centre, centroids[mid]) for mid in max_indexes]
         min_distance_to_centre = min(distances_to_centre)
         min_dist_index = [max_indexes[i] for i, a in enumerate(distances_to_centre) if a == min_distance_to_centre]
-        #print(min_dist_index)
         return min_dist_index[0]  # TODO: calculate by biggest width/height
 
     @staticmethod
@@ -76,7 +58,6 @@ class ConnectedComponentsDetector:
         rescaled_components_stats = []
         diode_indexes = []
         i = 0
-        #print(s)
         while i < len(c) and s[i][cv2.CC_STAT_HEIGHT] * s[i][cv2.CC_STAT_WIDTH] >= diode_threshold:
             if self._point_not_used(c[i], diode_indexes, s):
                 diode_indexes.append(i)
@@ -88,5 +69,4 @@ class ConnectedComponentsDetector:
             if self._point_not_used_restrictive(c[i], rescaled_components_stats):
                 diode_indexes.append(i)
             i += 1
-        #print([indexes[i] for i in list(set(range(len(stats))) - set(diode_indexes))])
         return [indexes[i] for i in list(set(range(len(stats))) - set(diode_indexes))]
