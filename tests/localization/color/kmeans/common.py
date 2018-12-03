@@ -10,7 +10,7 @@ blob_coordinates = [
     ((541.1138305664062, 43.25203323364258), 3.749695301055908),
     ((392.18328857421875, 29.525123596191406), 8.324203491210938)]
 
-image = cv2.imread(os.path.abspath("test_image.jpg"))
+image = cv2.imread(os.path.abspath("tests/resources/localization/color/kmeans/test_image.jpg"))
 
 colors_analyzed = [
     {'red': 3.883003111115027e-269, 'yellow': 1.2664165549094177e-14, 'green': 0.48304802297166255},
