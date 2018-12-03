@@ -1,9 +1,9 @@
 from unittest import TestCase
 from parameterized import parameterized
 from mrc.localization.camera.utils.diode_detector import DiodeDetector
-from tests.resources.localization.diode_detection.blobs.single_blob.expected_locations import \
+from tests.resources.localization.diode_detection.blobs.single_blob.data import \
     expected_locations as expected_locations_single
-from tests.resources.localization.diode_detection.blobs.multiple_blobs.expected_locations import \
+from tests.resources.localization.diode_detection.blobs.multiple_blobs.data import \
     expected_locations as expected_locations_multiple
 from tests.resources.localization.diode_detection.components.blobs.multiple_blobs.data import \
     expected_locations_diodes

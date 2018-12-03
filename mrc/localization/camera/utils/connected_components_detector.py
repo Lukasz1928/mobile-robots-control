@@ -1,10 +1,6 @@
 import math
-
 import cv2
-
-from mrc.localization.color.utils.color_converter import ColorConverter
 from mrc.utils.maths import points_2d_sqr_distance, point_in_rectangle, rescale_rectangle
-from tests.test_utils.read_image import read_image
 
 
 class ConnectedComponentsDetector:
@@ -77,23 +73,3 @@ class ConnectedComponentsDetector:
                 diode_indexes.append(i)
             i += 1
         return [indexes[i] for i in list(set(range(len(stats))) - set(diode_indexes))]
-
-
-# if __name__ == '__main__':
-#     ccvrt = ColorConverter()
-#
-#     img = cv2.imread(
-#         "C:/Users/Lukasz1928/Desktop/inz/mobile-robots-control/tests/resources/"
-#         "localization/diode_detection/blobs/single_blob/9.png")
-#     image = ccvrt.convert_to_binary(img, 10)
-#     ccd = ConnectedComponentsDetector()
-#     stats, components = ccd.detect(image)
-#
-#     for compo, stat in zip(components, stats):
-#         x_, y_ = compo
-#         x, y, w, h, _ = stat
-#         # neue = image[y:y + h, x:x + w]
-#         cv2.rectangle(img, (x, y), (x + w, y + h), [255, 0, 0])
-#         cv2.rectangle(img, (int(x), int(y)), (int(x + w), int(y + h)), [255, 0, 0])
-#         cv2.imshow('e', img)
-#         cv2.waitKey(0)

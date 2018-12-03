@@ -2,9 +2,9 @@ from unittest import TestCase
 from parameterized import parameterized
 from mrc.localization.camera.utils.blob_detector import BlobDetector
 from mrc.localization.color.utils.color_converter import ColorConverter
-from tests.resources.localization.diode_detection.blobs.multiple_blobs.expected_locations import \
+from tests.resources.localization.diode_detection.blobs.multiple_blobs.data import \
     expected_locations as multiple_expected_locations
-from tests.resources.localization.diode_detection.blobs.single_blob.expected_locations import \
+from tests.resources.localization.diode_detection.blobs.single_blob.data import \
     expected_locations as single_expected_locations
 from tests.test_utils.read_image import read_image
 from tests.test_utils.list_utils import list_contains_almost_equal

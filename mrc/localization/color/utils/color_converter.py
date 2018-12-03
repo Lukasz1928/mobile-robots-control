@@ -1,5 +1,4 @@
 import cv2
-
 from mrc.shared.exceptions.exceptions import ColorEncodingNotSupportedException
 
 
