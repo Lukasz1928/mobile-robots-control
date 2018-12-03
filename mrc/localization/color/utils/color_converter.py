@@ -20,8 +20,8 @@ class ColorConverter:
             image = cv2.cvtColor(image, conversion)
         return image
 
-    def convert_to_binary(self, image, threshold, color_encoding='BGR'):
-        gray = self.convert_to_grayscale(image, color_encoding)
+    def convert_to_binary(self, image, threshold, color_encoding='BGR', grayscale=False):
+        gray = self.convert_to_grayscale(image, color_encoding) if not grayscale else image
         _, binary = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
         return binary
 
