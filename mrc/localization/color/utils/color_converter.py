@@ -6,9 +6,6 @@ class ColorConverter:
 
     encoding_modifiers = {'BGR': [cv2.COLOR_BGR2GRAY], 'RGB': [cv2.COLOR_RGB2GRAY]}
 
-    def __init__(self):
-        pass
-
     def convert_to_grayscale(self, image, color_encoding='BGR'):
         conversion_types = self._get_grayscale_color_conversion_code(color_encoding)
         for conversion in conversion_types:

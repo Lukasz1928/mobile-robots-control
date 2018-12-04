@@ -4,8 +4,6 @@ from mrc.utils.maths import points_2d_sqr_distance, point_in_rectangle, rescale_
 
 
 class ConnectedComponentsDetector:
-    def __init__(self):
-        pass
 
     def detect(self, image, remove_background=True, remove_irrelevant=True):
         num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(image)

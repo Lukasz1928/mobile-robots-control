@@ -16,19 +16,19 @@ class TestColorConverterGrayscale(TestCase):
 
     def test_BGR_to_Grayscale(self):
         grayscale = self.converter.convert_to_grayscale(self.imageBGR, 'BGR')
-        self.assertTrue(np.array_equal(grayscale, self.expected_grayscale))
+        np.testing.assert_array_equal(grayscale, self.expected_grayscale)
 
     def test_RGB_to_Grayscale(self):
         grayscale = self.converter.convert_to_grayscale(self.imageRGB, 'RGB')
-        self.assertTrue(np.array_equal(grayscale, self.expected_grayscale))
+        np.testing.assert_array_equal(grayscale, self.expected_grayscale)
 
     def test_BGR_to_Grayscale_special(self):
         grayscale = self.converter.convert_to_grayscale(self.imageBGR, 'BGR')
-        self.assertTrue(np.array_equal(grayscale, self.expected_grayscale))
+        np.testing.assert_array_equal(grayscale, self.expected_grayscale)
 
     def test_RGB_to_Grayscale_special(self):
         grayscale = self.converter.convert_to_grayscale(self.imageBGR, 'BGR')
-        self.assertTrue(np.array_equal(grayscale, self.expected_grayscale))
+        np.testing.assert_array_equal(grayscale, self.expected_grayscale)
 
 
 class TestColorConverterBinary(TestCase):
@@ -43,9 +43,9 @@ class TestColorConverterBinary(TestCase):
     @parameterized.expand([[i] for i in range(9)])
     def test_BGR_to_binary(self, i):
         binary = self.converter.convert_to_binary(self.imageBGR, i / 8 * 255, 'BGR')
-        self.assertTrue(np.array_equal(binary, self.expected_images[i]))
+        np.testing.assert_array_equal(binary, self.expected_images[i])
 
     @parameterized.expand([[i] for i in range(9)])
     def test_RGB_to_binary(self, i):
         binary = self.converter.convert_to_binary(self.imageRGB, i / 8 * 255, 'RGB')
-        self.assertTrue(np.array_equal(binary, self.expected_images[i]))
+        np.testing.assert_array_equal(binary, self.expected_images[i])
