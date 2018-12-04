@@ -17,21 +17,24 @@ class TargetPositionCalculator:
         self._last_calculated = (0, 0)
         self._configurator = configurator
 
-    def calculate_actual_target_position(self, current_position, movement):
+    def calculate_actual_target_position(self, current_position, movement, epsilon=1e-3):
         """Method for calculating target position, without predicting master_unit further movement.
 
         Parameters
         ----------
-        current_position : (double, double)
+        current_position : (float, float)
             Position of master_unit discovered in current measure. It should have two fields, first one being radius,
             second being angle.
-        movement : (double, double)
+        movement : (float, float)
             Vector describing robot's self movement from the previous position. It should have two fields,
             first one being radius, second being angle.
+        epsilon : :obj:`float`, optional
+            Calculation precision, values below epsilon can be treated as 0. Default value = 1e-3.
+
 
         Returns
         -------
-        double, double
+        float, float
             Target position, relative from current_position. It has two fields,
             first one being radius, second being angle.
 
@@ -44,7 +47,7 @@ class TargetPositionCalculator:
         calculated_vector = calculate_movement_vector(prev_position, current_position, movement)
         self._last_calculated = translate_coordinate_system(self._last_calculated, 0, movement[1])
         if calculated_vector[0] == 0:
-            calculated_vector = self._last_calculated if self._last_calculated[0] != 0 else movement
+            calculated_vector = self._last_calculated if self._last_calculated[0] < epsilon else (0, 0)
         else:
             self._last_calculated = calculated_vector
         relative_target_position = translate_coordinate_system(self._configurator.target_position, 0,
@@ -53,25 +56,27 @@ class TargetPositionCalculator:
         self._previous_position = current_position
         return target_position
 
-    def predict_further_target_position(self, current_position, movement, multiplier=1):
+    def predict_further_target_position(self, current_position, movement, multiplier=1, epsilon=1e-3):
         """Method for calculating target position, predicting master_unit further movement.
 
         It adds master_unit movement vector (length multiplied by multiplier) to calculated actual target position.
 
         Parameters
         ----------
-        current_position : (double, double)
+        current_position : (float, float)
             Position of master_unit discovered in current measure. It should have two fields, first one being radius,
             second being angle.
-        movement : (double, double)
+        movement : (float, float)
             Vector describing robot's self movement from the previous position. It should have two fields,
             first one being radius, second being angle.
-        multiplier : :obj:`double`, optional
+        multiplier : :obj:`float`, optional
             Value describing movement vector length modifier, default = 1.
+        epsilon : :obj:`float`, optional
+            Calculation precision, values below epsilon can be treated as 0. Default value = 1e-3.
 
         Returns
         -------
-        double, double
+        float, float
             Target position, predicted basing on master_unit previous moves. It has two fields,
             first one being radius, second being angle.
 
@@ -85,5 +90,5 @@ class TargetPositionCalculator:
             in e.g. 1,2N time, multiplier should be 1,2. It should prevent our unit from going out of sync
             with master_unit due to difference between timedeltas in previous and current measures.
         """
-        target_position = self.calculate_actual_target_position(current_position, movement)
+        target_position = self.calculate_actual_target_position(current_position, movement, epsilon)
         return sum_vectors(target_position, (self._last_calculated[0] * multiplier, self._last_calculated[1]))
