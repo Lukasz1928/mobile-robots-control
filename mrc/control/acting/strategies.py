@@ -14,7 +14,6 @@ class FollowMasterStrategy(AbstractStrategy):
         self.locations = None
         self.current_step = (0, 0)
         self.step_reached = True
-        self.driving = False
 
     def read(self):
         self.locations = self.locator.get_locations(None)
@@ -30,19 +29,16 @@ class FollowMasterStrategy(AbstractStrategy):
             self.step_reached = False
 
     def act(self):
-        if not self.step_reached and not self.driving:
+        if not self.step_reached:
             try:
                 self.steering_interface.update_data(locations=self.locations, master=self.configurator.master_unit)
                 self.steering_interface.drive_to_point(self.current_step)
-                self.driving = True
+                self.current_step = (0, 0)
             except ObstacleOnTheWayException as ootwe:
                 print(ootwe.message)
-                self.driving = False
             except SteeringException:
                 print("Something went wrong")  # TODO: Add logger to whole project
-                self.driving = False
-        elif self.step_reached and self.driving:
-            self.driving = False
+        elif self.step_reached:
             print("Dojechalem")
         else:  # We did not reach the step and still driving
             print("Pyr pyr.")
