@@ -1,0 +1,4 @@
+
+
+class MRCException(Exception):
+    pass
