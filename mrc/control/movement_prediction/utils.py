@@ -35,11 +35,11 @@ def sum_vectors(*vecs):
     Parameters
     ----------
     *vecs
-        Variable length list of (double, double) array-likes, where first field is distance, second is radius.
+        Variable length list of (float, float) array-likes, where first field is distance, second is radius.
 
     Returns
     -------
-    (double, double)
+    float, float
         Vector, where first field is distance, second is radius.
     """
     norm_vecs_c = [_polar2cartesian(_normalize_polars(vector)) for vector in vecs]
@@ -58,6 +58,7 @@ def translate_coordinate_system(v_old, distance, rotation):
         Length of vector that coordinate system was moved along.
     rotation : float
         Angle of coordinate system's rotation in radians.
+
 
     Returns
     -------
@@ -83,17 +84,17 @@ def calculate_movement_vector(pos_prev, pos_current, coord_mov):
 
     Parameters
     ----------
-    pos_prev : (double, double)
+    pos_prev : (float, float)
         Previous position. It should have two fields, first one being radius, second being angle.
-    pos_current : (double, double)
+    pos_current : (float, float)
         Current position. It should have two fields, first one being radius, second being angle.
-    coord_mov : (double, double)
+    coord_mov : (float, float)
         Vector that coordinate system was translated by. It should have two fields, first one being distance,
         second being rotation.
 
     Returns
     -------
-    (double, double)
+    float, float
         Calculated vector of movement between given positions in new coordinate system. It will have two fields,
         first one being distance, second being rotation.
 
