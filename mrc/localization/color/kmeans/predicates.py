@@ -19,7 +19,7 @@ class GaussianHSVPredicate:
 
         Returns
         -------
-        `double`
+        `float`
             Probability of hue being of color in given range, value from [0.0, 1.0].
         """
         a, b = range_[0], range_[-1]

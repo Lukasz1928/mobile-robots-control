@@ -1,3 +1,4 @@
+chainer
 opencv-python
 numpy
 scikit-learn
