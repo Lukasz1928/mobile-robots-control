@@ -1,5 +1,7 @@
 from collections import defaultdict
+
 import cv2
+
 from mrc.localization.camera.utils.blob_detector import BlobDetector
 from mrc.localization.camera.utils.connected_components_detector import ConnectedComponentsDetector
 from mrc.localization.color.utils.color_converter import ColorConverter
@@ -18,16 +20,19 @@ class DiodeDetector:
                                                               grayscale=True)
         keypoints = self.blob_detector.detect(grayscale_image)
         stats, centroids = self.connected_components_detector.detect(binary_image)
-        ctb_mapping = self._calculate_image_parts_mapping(keypoints, stats)
+        ctb_mapping, btc_mapping = self._calculate_image_parts_mapping(keypoints, stats)
         points = [max([(keypoints[bid], keypoints[bid].size / 2) for bid in blob_ids], key=lambda x: x[1])[0] for
                   blob_ids in ctb_mapping.values()]
-        return points
+        areas = [stats[btc_mapping[i]] for p in points for i, k in enumerate(keypoints) if k == p]
+        return points, areas
 
     def _calculate_image_parts_mapping(self, keypoints, stats):
         ctb_mapping = defaultdict(list)
+        btc_mapping = {}
         for i, kp in enumerate(keypoints):
             for j, s in enumerate(stats):
                 if point_in_rectangle(kp.pt, (s[cv2.CC_STAT_LEFT], s[cv2.CC_STAT_TOP]),
                                       (s[cv2.CC_STAT_WIDTH], s[cv2.CC_STAT_HEIGHT])):
                     ctb_mapping[j].append(i)
-        return ctb_mapping
+                    btc_mapping[i] = j
+        return ctb_mapping, btc_mapping
