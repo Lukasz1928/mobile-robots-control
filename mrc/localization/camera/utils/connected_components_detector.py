@@ -19,6 +19,13 @@ class ConnectedComponentsDetector:
             centroids_list = [centroids_list[i] for i in range(len(centroids_list)) if i not in irrelevant_indexes]
         return stats_list, centroids_list
 
+    def get_background_component(self, image):
+        num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(image)
+        stats_list = stats.tolist()
+        centroids_list = centroids.tolist()
+        background_component_index = self._get_background_component_index(image, stats, centroids)
+        return stats_list[background_component_index], centroids_list[background_component_index]
+
     def _get_background_component_index(self, image, stats, centroids):
         image_centre = (image.shape[0] / 2, image.shape[1] / 2)
         areas = [s[cv2.CC_STAT_HEIGHT] * s[cv2.CC_STAT_WIDTH] for s in stats]
