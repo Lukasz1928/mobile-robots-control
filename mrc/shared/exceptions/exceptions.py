@@ -15,3 +15,7 @@ class SteeringException(MRCException):
 
 class ObstacleOnTheWayException(SteeringException):
     pass
+
+
+class DataSizeException(Exception):
+    pass

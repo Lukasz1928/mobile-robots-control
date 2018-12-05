@@ -1,8 +1,5 @@
 from unittest import TestCase
-import cv2
-import numpy as np
 from parameterized import parameterized
-
 from mrc.distance.utils.circle_radius_calculator import calculate_radius
 from mrc.localization.color.utils.color_converter import ColorConverter
 from tests.test_utils.read_image import read_image
