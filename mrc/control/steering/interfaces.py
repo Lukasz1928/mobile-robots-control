@@ -4,10 +4,11 @@ from mrc.shared.exceptions.exceptions import ObstacleOnTheWayException
 
 class CarefulDTPSteeringInterface(AbstractDTPSteeringInterface):
 
-    def __init__(self, motor_driver):
+    def __init__(self, motor_driver, angle_offset=0.39):
         self.master = None
         self.all_robots_position = None
         self.motor_driver = motor_driver
+        self.angle_offset = angle_offset
 
     def _in_route(self, target_point):
         r, theta = target_point
@@ -15,7 +16,7 @@ class CarefulDTPSteeringInterface(AbstractDTPSteeringInterface):
         for (name, pos) in self.all_robots_position.values():
             if name != self.master:
                 r_i, theta_i = pos
-                if r_i < r / 2 and theta_i - 0.17 < theta < theta_i + 0.17:
+                if r_i < r / 2 and theta_i - self.angle_offset < theta < theta_i + self.angle_offset:
                     res.append(name)
         return bool(len(res)), res
 
