@@ -7,3 +7,11 @@ class IncorrectShapeException(MRCException):
 
 class ColorEncodingNotSupportedException(MRCException):
     pass
+
+
+class SteeringException(MRCException):
+    pass
+
+
+class ObstacleOnTheWayException(SteeringException):
+    pass

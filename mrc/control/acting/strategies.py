@@ -1,6 +1,6 @@
 from mrc.control.acting.abstract import AbstractStrategy
 from mrc.control.movement_prediction.target_position_calculator import TargetPositionCalculator
-from mrc.control.steering.exceptions import ObstacleOnTheWayException, SteeringException
+from mrc.shared.exceptions.exceptions import ObstacleOnTheWayException, SteeringException
 from mrc.shared.position import PolarPosition
 
 

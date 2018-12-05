@@ -1,5 +1,5 @@
 from mrc.control.steering.abstract import AbstractDTPSteeringInterface
-from mrc.control.steering.exceptions import ObstacleOnTheWayException
+from mrc.shared.exceptions.exceptions import ObstacleOnTheWayException
 
 
 class CarefulDTPSteeringInterface(AbstractDTPSteeringInterface):
