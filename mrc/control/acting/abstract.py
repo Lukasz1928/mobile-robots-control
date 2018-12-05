@@ -5,12 +5,12 @@ class AbstractStrategy(ABC):
 
     @abstractmethod
     def read(self, **kwargs):
-        raise NotImplementedError()
+        pass
 
     @abstractmethod
     def think(self, **kwargs):
-        raise NotImplementedError()
+        pass
 
     @abstractmethod
     def act(self, **kwargs):
-        raise NotImplementedError()
+        pass

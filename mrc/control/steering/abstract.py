@@ -5,8 +5,8 @@ class AbstractDTPSteeringInterface(ABC):
 
     @abstractmethod
     def drive_to_point(self, point):
-        raise NotImplementedError()
+        pass
 
     @abstractmethod
     def update_data(self, **kwargs):
-        raise NotImplementedError()
+        pass
