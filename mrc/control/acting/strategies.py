@@ -35,7 +35,7 @@ class FollowMasterStrategy(AbstractStrategy):
                 self.steering_interface.drive_to_point(self.current_step)
                 self.current_step = (0, 0)
             except ObstacleOnTheWayException as ootwe:
-                print(ootwe.message)
+                print(str(ootwe))
             except SteeringException:
                 print("Something went wrong")  # TODO: Add logger to whole project
         elif self.step_reached:
