@@ -1,24 +1,20 @@
 from threading import Thread
-from mrc.shared.position import PolarPosition
 
 
 class Controller(Thread):
-    def __init__(self, locator, drive_to_point, configurator):
+    def __init__(self, locator, configurator, acting_strategy):
         super().__init__()
-        self.drive_to_point = drive_to_point
         self.locator = locator
         self.configurator = configurator
         self.running = False
+        self.acting_strategy = acting_strategy
 
     def run(self):
         self.running = True
         while self.running:
-            target_position = self.configurator.target_position
-            if PolarPosition.are_positions_approximately_same(target_position,
-                                                      self.locator.get_locations(self.configurator.master_unit)):
-                angle = target_position.angle
-                radius = target_position.radius
-                self.drive_to_point(angle, radius)
+            self.acting_strategy.read()
+            self.acting_strategy.think()
+            self.acting_strategy.act()
 
     def is_running(self):
         return self.running
