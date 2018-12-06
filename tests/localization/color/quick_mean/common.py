@@ -41,4 +41,4 @@ all_colors = ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow']
 
 photos_with_colors = [(read_image(path.format(i)), i) for i in all_colors]
 
-indexed_photos_with_colors = [[read_image(path.format(i)), idx] for idx, i in enumerate(all_colors)]
+indexed_photos_with_colors = [[read_image(path.format(i)), i, idx] for idx, i in enumerate(all_colors)]

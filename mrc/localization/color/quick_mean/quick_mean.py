@@ -31,13 +31,11 @@ class Analyser:
     def analyse_chunk(self, image_chunk):
         pixel_list = image_chunk.reshape(-1, 3)
         mean_color = np.mean(pixel_list, axis=0)
-        print(rgb2hsv(*mean_color))
         return self._color_analysis(rgb2hsv(*mean_color))
 
     def _color_analysis(self, hsv_pixel):
         hue, _, _ = hsv_pixel
-        return {color_val.name: self._resolving_predicate(hue if hue in range(0, 330) else hue - 360, color_val.value)
-                for color_val in
+        return {color_val.name: self._resolving_predicate(hue, color_val.value) for color_val in
                 self._color_values}
 
 

@@ -16,7 +16,7 @@ class CustomColorValue(Enum):
 
 class TestAnalyser(TestCase):
     @parameterized.expand(common.indexed_photos_with_colors)
-    def test_analyse_chunk_with_default_colors(self, image, idx):
+    def test_analyse_chunk_with_default_colors(self, image, color, idx):
         analyser = Analyser(DefaultColorValues)
 
         estimated = analyser.analyse_chunk(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
