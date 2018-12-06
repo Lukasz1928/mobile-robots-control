@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from parameterized import parameterized
 
-from mrc.localization.color.utils.utils import rgb2hsv
+from mrc.localization.color.utils.color_converter import rgb2hsv
 from tests.localization.color.quick_mean import common
 
 

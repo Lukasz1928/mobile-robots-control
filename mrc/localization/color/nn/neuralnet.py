@@ -1,15 +1,9 @@
-import numpy as np
-
-import cv2
-
 import chainer
-
-from mrc.localization.camera.utils.connected_components_detector import ConnectedComponentsDetector
-from mrc.localization.color.abstract import ColorRecognitionStrategy
-from mrc.localization.color.defaults import DefaultColorValues
-from mrc.localization.color.utils.utils import chop_blobs
 import chainer.functions as F
 import chainer.links as L
+import numpy as np
+
+from mrc.localization.color.abstract import ColorRecognitionStrategy
 
 
 class DefaultModel:

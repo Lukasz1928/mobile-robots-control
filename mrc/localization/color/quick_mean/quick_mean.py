@@ -4,7 +4,7 @@ import numpy as np
 from mrc.localization.color.abstract import ColorRecognitionStrategy
 from mrc.localization.color.defaults import DefaultColorValues
 from mrc.localization.color.quick_mean.predicates import GaussianHSVPredicate
-from mrc.localization.color.utils.utils import rgb2hsv, chop_blobs
+from mrc.localization.color.utils.color_converter import rgb2hsv
 
 
 class QuickMeanStrategy(ColorRecognitionStrategy):
