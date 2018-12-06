@@ -15,9 +15,7 @@ class TestExtractor(TestCase):
         self.analyser_mock = Mock()
         self.extractor = Extractor(analyser=self.analyser_mock)
 
-    @parameterized.expand([
-        (read_image('localization/color/quick_mean/{}.png'.format(i)), i, idx)
-        for idx, i in enumerate(['red', 'green', 'blue', 'cyan', 'magenta', 'yellow'])])
+    @parameterized.expand(common.indexed_photos_with_colors)
     def test_extract(self, image, color, idx):
         self.analyser_mock.analyse_chunk.return_value = common.colors_analyzed[idx]
         actual_extracted = self.extractor.extract(image)

@@ -1,5 +1,7 @@
 import cv2
 
+from tests.test_utils.read_image import read_image
+
 image = cv2.imread('tests/localization/color/quick_mean/test_image.jpg')
 
 colors_analyzed = [
@@ -33,3 +35,10 @@ rgb_pixels = [
     [46.955729166666664, 1.2838541666666667, 77.56510416666667],
     [33.88901098901099, 25.616640502354787, 10.613971742543171]
 ]
+
+path = 'localization/color/quick_mean/{}.png'
+all_colors = ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow']
+
+photos_with_colors = [(read_image(path.format(i)), i) for i in all_colors]
+
+indexed_photos_with_colors = [[read_image(path.format(i)), idx] for idx, i in enumerate(all_colors)]

@@ -1,13 +1,12 @@
-import cv2
 from enum import Enum
 from unittest import TestCase
 
+import cv2
 from parameterized import parameterized
 
 from mrc.localization.color.defaults import DefaultColorValues
 from mrc.localization.color.quick_mean.quick_mean import Analyser
 from tests.localization.color.quick_mean import common
-from tests.test_utils.read_image import read_image
 
 
 class CustomColorValue(Enum):
@@ -16,10 +15,7 @@ class CustomColorValue(Enum):
 
 
 class TestAnalyser(TestCase):
-    @parameterized.expand([
-        [read_image('localization/color/quick_mean/{}.png'.format(i)), idx]
-        for idx, i in enumerate(['red', 'green', 'blue', 'cyan', 'magenta', 'yellow'])
-    ])
+    @parameterized.expand(common.indexed_photos_with_colors)
     def test_analyse_chunk_with_default_colors(self, image, idx):
         analyser = Analyser(DefaultColorValues)
 
