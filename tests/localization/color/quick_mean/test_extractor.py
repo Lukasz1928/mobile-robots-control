@@ -3,17 +3,15 @@ from unittest.mock import Mock
 
 from parameterized import parameterized
 
-from mrc.localization.color.quick_mean.quick_mean import Extractor
-
+from mrc.localization.color.quick_mean.quick_mean import ColorCalculator
 from tests.localization.color.quick_mean import common
-from tests.test_utils.read_image import read_image
 
 
-class TestExtractor(TestCase):
+class TestColorCalculator(TestCase):
 
     def setUp(self):
         self.analyser_mock = Mock()
-        self.extractor = Extractor(analyser=self.analyser_mock)
+        self.extractor = ColorCalculator(analyser=self.analyser_mock)
 
     @parameterized.expand(common.indexed_photos_with_colors)
     def test_extract(self, image, color, idx):

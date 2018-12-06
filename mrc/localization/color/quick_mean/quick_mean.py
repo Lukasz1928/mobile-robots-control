@@ -1,3 +1,5 @@
+from functools import reduce
+
 import cv2
 import numpy as np
 
@@ -9,8 +11,8 @@ from mrc.localization.color.utils.color_converter import rgb2hsv
 
 class QuickMeanStrategy(ColorRecognitionStrategy):
     def __init__(self, color_values=DefaultColorValues, fitting_strategy='gaussian'):
-        self.analyser = Analyser(predicate_strategy=fitting_strategy, color_values=color_values)
-        self.extractor = Extractor(self.analyser)
+        self.analyser = ColorAnalyser(predicate_strategy=fitting_strategy, color_values=color_values)
+        self.extractor = ColorCalculator(self.analyser)
 
     def __call__(self, image):
         return self.extractor.extract(image)
@@ -22,9 +24,8 @@ class Predicates:
     }
 
 
-class Analyser:
+class ColorAnalyser:
     def __init__(self, color_values, predicate_strategy='gaussian'):
-        self._clusters = 1
         self._resolving_predicate = Predicates.allowed[predicate_strategy]
         self._color_values = color_values
 
@@ -39,7 +40,7 @@ class Analyser:
                 self._color_values}
 
 
-class Extractor:
+class ColorCalculator:
     def __init__(self, analyser):
         self.analyser = analyser
 
@@ -49,10 +50,4 @@ class Extractor:
 
     def _execute_analysis(self, chunk):
         analysis = self.analyser.analyse_chunk(chunk)
-        max_value = -1
-        final_color = None
-        for key, value in analysis.items():
-            if value > max_value:
-                max_value = value
-                final_color = key
-        return final_color
+        return reduce(lambda i1, i2: max(i1, i2, key=lambda x: x[1]), analysis.items())[0]
