@@ -1,9 +1,9 @@
+import colorsys
 import cv2
 from mrc.shared.exceptions.exceptions import ColorEncodingNotSupportedException
 
 
 class ColorConverter:
-
     encoding_modifiers = {'BGR': [cv2.COLOR_BGR2GRAY], 'RGB': [cv2.COLOR_RGB2GRAY]}
 
     def convert_to_grayscale(self, image, color_encoding='BGR'):
@@ -23,3 +23,29 @@ class ColorConverter:
                 "{} color encoding is not supported. Supported encodings are {}".format(color_encoding,
                                                                                         self.encoding_modifiers.keys()))
         return self.encoding_modifiers[color_encoding]
+
+
+def rgb2hsv(r, g, b):
+    """
+    Parameters
+    ----------
+    r : `int`
+        Value of intensity of red in RGB model
+    g : `int`
+        Value of intensity of green in RGB model
+    b : `int`
+        Value of intensity of blue in RGB model
+
+    Returns
+    -------
+    (`double`, `double`, `double`)
+        Color in HSV model.
+        Values range inbetween [0, 360).
+
+    Note
+    ----
+    r, g, b input values should be in range [0, 255].
+    """
+    scaled_rgb = [color / 255 for color in (r, g, b)]
+    hsv = colorsys.rgb_to_hsv(*scaled_rgb)
+    return tuple(int((color * 360)) for color in hsv)
