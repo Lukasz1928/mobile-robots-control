@@ -3,7 +3,7 @@ import math
 
 class CirclePoints:
     """
-    Class responsible for helping to iterate through circle points.
+    Class responsible for getting all points inside a circle.
 
     Intended for internal usage.
     """

@@ -13,10 +13,10 @@ class AngularProbability:
         """
         Parameters
         ----------
-        sigma : float
-            Gaussian function parameter
-        mu : float
-            Gaussian function parameter
+        stdev : float
+            Standard deviation
+        mean : float
+            Mean value
         coef : float
             Range expansion coefficient
         """

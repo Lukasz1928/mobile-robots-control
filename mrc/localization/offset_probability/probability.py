@@ -14,9 +14,9 @@ class PositionPredictor:
         Parameters
         ----------
         sigma : float
-            Gaussian function parameter
+            Standard deviation
         mu : float
-            Gaussian function parameter
+            Expected value / mean
         coef : float
             Range expansion coefficient
         """
