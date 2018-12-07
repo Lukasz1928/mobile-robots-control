@@ -4,11 +4,12 @@ import numpy as np
 from mrc.localization.color.utils.color_converter import ColorConverter
 
 
-def calculate_radius(photo):
+def calculate_radius(photo, blur_kernel_size=5, rotation_threshold=0.2):
     cc = ColorConverter()
-    blur = cv2.GaussianBlur(photo, (5, 5), 0)
+    blur = cv2.GaussianBlur(photo, (blur_kernel_size, blur_kernel_size), 0)
     bin_photo = cc.convert_to_binary(blur, 5)
-    if [bin_photo[bin_photo.shape[0] // 2][i] for i in range(bin_photo.shape[1])].count(0) > 0.2 * bin_photo.shape[1]:
+    if [bin_photo[bin_photo.shape[0] // 2][i] for i in range(bin_photo.shape[1])].count(0) > rotation_threshold * \
+            bin_photo.shape[1]:
         bin_photo = np.transpose(bin_photo)
     whites = [(0, [bin_photo[0][i] for i in range(bin_photo.shape[1])].count(255))]
     for j in range(1, bin_photo.shape[0]):

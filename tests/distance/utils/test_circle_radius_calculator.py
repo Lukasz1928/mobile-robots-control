@@ -10,8 +10,9 @@ class TestColorConverterGrayscale(TestCase):
         self.converter = ColorConverter()
         self.images = [read_image('distance/utils/circle_radius/1.png'),
                        read_image('distance/utils/circle_radius/1t.png')]
+        self.expected_radius = [268, 268]
 
     @parameterized.expand([[i] for i in range(2)])
     def test_calculate_radius(self, image_id):
         radius = calculate_radius(self.images[image_id])
-        self.assertAlmostEqual(radius, 268, delta=3)
+        self.assertAlmostEqual(radius, self.expected_radius[image_id], delta=3)

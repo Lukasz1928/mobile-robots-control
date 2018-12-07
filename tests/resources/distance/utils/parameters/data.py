@@ -20,4 +20,4 @@ real_locations = [(u - 40 + 18, v - 300 + 5) for (u, v) in real_locations]
 
 real_angles = [math.atan(math.sqrt(u ** 2 + v ** 2) / (10.0 * height)) for (u, v) in real_locations]
 
-radius = 411
+image_circle_radius = 411
