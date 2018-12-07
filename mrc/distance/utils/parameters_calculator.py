@@ -1,8 +1,6 @@
 import math
-import numpy as np
 from scipy.optimize import curve_fit
 from mrc.distance.distance_function import distance_function_with_params
-from mrc.distance.utils.circle_radius_calculator import calculate_radius
 from mrc.localization.camera.utils.diode_detector import DiodeDetector
 from mrc.localization.color.utils.color_converter import ColorConverter
 from mrc.shared.exceptions.exceptions import DataSizeException

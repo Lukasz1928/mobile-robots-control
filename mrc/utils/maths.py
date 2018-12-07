@@ -34,4 +34,3 @@ def normalize_point_in_circle(point, resolution, radius):
     point_vector = [image_centre[0] - point[0], point[1] - image_centre[1]]
     npv = [point_vector[0] / radius, point_vector[1] / radius]
     return npv
-    
