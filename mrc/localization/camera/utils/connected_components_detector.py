@@ -1,11 +1,38 @@
 import math
+
 import cv2
+
 from mrc.utils.maths import points_2d_sqr_distance, point_in_rectangle, rescale_rectangle
 
 
 class ConnectedComponentsDetector:
+    """
+    Class responsible for detecting connected components.
+
+    Intended for internal usage.
+    """
 
     def detect(self, image, remove_background=True, remove_irrelevant=True):
+        """
+        Parameters
+        ----------
+        image : numpy.ndarray
+            Image to detect blobs on. It must be in binary (two-valued) format.
+
+        remove_background : bool, optional
+            Should function ignore background. Default is True.
+
+        remove_irrelevant : bool, optional
+            Should function ignore tiny specks, most probably reflections. Default is True.
+            Parameter is ignored if `remove_background` is False.
+
+        Returns
+        -------
+        list of array-like, list of array-like
+            First one is list of five-element lists, containing info about connected component.
+            Second one is list of (x, y) localizations of centers of mass of connected component.
+
+        """
         num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(image)
         stats_list = stats.tolist()
         centroids_list = centroids.tolist()
