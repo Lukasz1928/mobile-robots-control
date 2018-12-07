@@ -45,6 +45,10 @@ class DiodeDetector:
             First one is list of Keypoints corresponding to found diodes.
             Second one is list of five-element lists, containing info about image areas diodes were found in.
 
+        Notes
+        -----
+        So far, the only color encodings accepted are 'BGR' and 'RGB'.
+
         """
         grayscale_image = self.color_converter.convert_to_grayscale(image, color_encoding)
         binary_image = self.color_converter.convert_to_binary(grayscale_image, threshold, color_encoding,
