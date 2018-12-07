@@ -35,7 +35,7 @@ class TestConnectedComponentsDetectorBackground(TestCase):
             read_image('localization/diode_detection/components/background/{}.png'.format(i)), 10) for i in range(1, 3)]
 
     @parameterized.expand([[i] for i in range(2)])
-    def test_detect_background(self, image_id):
+    def test_remove_background(self, image_id):
         img = self.images[image_id]
         stats_with_background, centroids_with_background = self.detector.detect(img, False)
         stats_without_background, centroids_without_background = self.detector.detect(img)
@@ -47,13 +47,11 @@ class TestConnectedComponentsDetectorBackground(TestCase):
     @parameterized.expand([[i] for i in range(2)])
     def test_background_ranges(self, image_id):
         img = self.images[image_id]
-        stats_with_background, _ = self.detector.detect(img, False)
-        stats_without_background, _ = self.detector.detect(img)
-        background_stats = list_difference(stats_with_background, stats_without_background)
-        self.assertEqual(background_stats[0][cv2.CC_STAT_LEFT], 0)
-        self.assertEqual(background_stats[0][cv2.CC_STAT_TOP], 0)
-        self.assertEqual(background_stats[0][cv2.CC_STAT_WIDTH], 500)
-        self.assertEqual(background_stats[0][cv2.CC_STAT_HEIGHT], 500)
+        background_stats, _ = self.detector.get_background_component(img)
+        self.assertEqual(background_stats[cv2.CC_STAT_LEFT], 0)
+        self.assertEqual(background_stats[cv2.CC_STAT_TOP], 0)
+        self.assertEqual(background_stats[cv2.CC_STAT_WIDTH], 500)
+        self.assertEqual(background_stats[cv2.CC_STAT_HEIGHT], 500)
 
 
 class TestConnectedComponentsDetectorBasic(TestCase):

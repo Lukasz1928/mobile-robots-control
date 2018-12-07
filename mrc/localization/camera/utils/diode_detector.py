@@ -1,7 +1,5 @@
 from collections import defaultdict
-
 import cv2
-
 from mrc.localization.camera.utils.blob_detector import BlobDetector
 from mrc.localization.camera.utils.connected_components_detector import ConnectedComponentsDetector
 from mrc.localization.color.utils.color_converter import ColorConverter
