@@ -1,18 +1,57 @@
 import colorsys
 import cv2
+
 from mrc.shared.exceptions.exceptions import ColorEncodingNotSupportedException
 
 
 class ColorConverter:
+    """
+    Set of tools aiding in color conversion.
+
+    Intended for internal usage.
+    """
+
     encoding_modifiers = {'BGR': [cv2.COLOR_BGR2GRAY], 'RGB': [cv2.COLOR_RGB2GRAY]}
 
     def convert_to_grayscale(self, image, color_encoding='BGR'):
+        """
+        Convert image from given color encoding to grayscale
+        Parameters
+        ----------
+        image : numpy.ndarray
+            Array representation of input image in given color encoding.
+        color_encoding : str, optional
+            String representation of color encoding of input image. Default is 'BGR'.
+
+        Returns
+        -------
+        numpy.ndarray
+            Input image in grayscale.
+        """
         conversion_types = self._get_grayscale_color_conversion_code(color_encoding)
         for conversion in conversion_types:
             image = cv2.cvtColor(image, conversion)
         return image
 
     def convert_to_binary(self, image, threshold, color_encoding='BGR', grayscale=False):
+        """
+        Convert image from given color encoding to grayscale
+        Parameters
+        ----------
+        image : numpy.ndarray
+            Array representation of input image in given color encoding.
+        threshold : int
+            Border of classifying gray-scale value as either white or black in binarization of image.
+            Values above threshold will be classified as white, below as black.
+        color_encoding : str, optional
+            String representation of color encoding of input image. Default is 'BGR'.
+        grayscale : bool, optional
+            Information about image being grayscale. Default is False.
+        Returns
+        -------
+        numpy.ndarray
+            Input image in grayscale.
+        """
         gray = self.convert_to_grayscale(image, color_encoding) if not grayscale else image
         _, binary = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
         return binary
