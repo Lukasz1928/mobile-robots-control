@@ -14,7 +14,8 @@ class CameraReader:
         Parameters
         ----------
         resolution : (int, int), optional
-            Resolution of captured frames, default is 640x480.
+            Resolution of captured frames, default is 640x480. First number should be multiple of 16,
+            second number should be multiple of 32.
 
         Notes
         -----
