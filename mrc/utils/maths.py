@@ -23,8 +23,8 @@ def point_in_rectangle(point, rect_top_left, rect_sides):
 
 
 def rescale_rectangle(top_left, sides, ratio):
-    rescaled_top_left = (top_left[0] + sides[0] / 2.0 - sides[0] / math.sqrt(2.0),
-                         top_left[1] + sides[1] / 2.0 - sides[1] / math.sqrt(2.0))
+    rescaled_top_left = (top_left[0] + sides[0] / 2.0 - sides[0] / 2.0 * ratio,
+                         top_left[1] + sides[1] / 2.0 - sides[1] / 2.0 * ratio)
     rescaled_sides = (sides[0] * ratio, sides[1] * ratio)
     return rescaled_top_left, rescaled_sides
 
