@@ -2,7 +2,20 @@ import math
 
 
 class CirclePoints:
+    """
+    Class responsible for getting all points inside a circle.
+
+    Intended for internal usage.
+    """
     def __init__(self, centre, radius):
+        """
+        Parameters
+        ----------
+        centre : (int, int)
+            x, y coordinates of circle center.
+        radius : int
+            radius of circle.
+        """
         self.centre = centre
         self.radius = radius
         self.current_location_vector = [0, radius + 1]
