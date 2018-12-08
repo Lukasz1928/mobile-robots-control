@@ -19,9 +19,9 @@ class Locator(threading.Thread):
         ----------
         robot_list : list
             List of IDs of robots in environment.
-        read_data : Callable() -> list
+        read_data : Callable
             Function taking no arguments returning raw robot location data.
-        process_data : Callable(list) -> list, optional
+        process_data : Callable, optional
             Optional function that takes raw location data and returns processed data.
             If None, the `read_data` output will be treated as final localization data.
         interval : float
