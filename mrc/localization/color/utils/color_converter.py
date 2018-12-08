@@ -41,7 +41,7 @@ class ColorConverter:
         image : numpy.ndarray
             Array representation of input image in given color encoding.
         threshold : int
-            Border of classifying gray-scale value as either white or black in binarization of image.
+            Boundary of classifying gray-scale value as either white or black in binarization of image.
             Values above threshold will be classified as white, below as black.
         color_encoding : str, optional
             String representation of color encoding of input image. Default is 'BGR'.
