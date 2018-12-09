@@ -2,9 +2,10 @@ import wiringpi
 
 
 class WS2811:
-    def __init__(self, rgb, spi_ch=1, spi_speed=2000000):
+    def __init__(self, rgb, reset_pin=22, spi_ch=1, spi_speed=2000000):
         self._verify_color(rgb)
         self.rgb = rgb
+        self.reset_pin = reset_pin
         self.spi_ch = spi_ch
         self.spi_speed = spi_speed
         wiringpi.wiringPiSetupGpio()
@@ -21,6 +22,11 @@ class WS2811:
         self.rgb = rgb
         self.send_color_via_spi()
 
+    def reset(self):
+        wiringpi.pinMode(self.reset_pin, 1)
+        wiringpi.digitalWrite(self.reset_pin, 0)
+        wiringpi.pinMode(self.reset_pin, 0)
+
     @staticmethod
     def _verify_color(rgb):
         if len(rgb) != 3:
@@ -28,6 +34,5 @@ class WS2811:
         for color in rgb:
             if color not in range(256):
                 raise ValueError("Diode colors must be an iterable structure [r,g,b] for rgb in ranges 0,255")
-        return True
 
 
