@@ -5,40 +5,64 @@ from mrc.shared.position import PolarPosition
 
 
 class FollowMasterStrategy(AbstractStrategy):
+    """
+    Implementation of robot behavior.
+
+    In this one, the robot is supposed to follow master in position specified in configuration.
+    """
 
     def __init__(self, steering_interface, locator, configurator):
-        self.steering_interface = steering_interface
-        self.locator = locator
-        self.configurator = configurator
-        self.position_calculator = TargetPositionCalculator(self.configurator)
-        self.locations = None
-        self.current_step = (0, 0)
-        self.step_reached = True
+        """
+        Parameters
+        ----------
+        steering_interface : mrc.control.steering.abstract.AbstractDTPSteeringInterface
+            Robot steering interface, responsible for moving unit to received target place.
+        locator : mrc.localization.locator.Locator
+            Main localization class, responsible for reading the info about environment.
+        configurator : mrc.configuration.configurator.Configurator
+            Robot configuration container.
+        """
+        self._steering_interface = steering_interface
+        self._locator = locator
+        self._configurator = configurator
+        self._position_calculator = TargetPositionCalculator(self._configurator)
+        self._locations = None
+        self._current_step = (0, 0)
+        self._step_reached = True
 
     def read(self):
-        self.locations = self.locator.get_locations(None)
-        if self.step_reached:
-            master_position = self.locator.get_locations(self.configurator.master_unit)
-            self.current_step = self.position_calculator.calculate_actual_target_position(master_position,
-                                                                                          self.current_step)
+        """
+        Method reading environment state.
+        """
+        self._locations = self._locator.get_locations(None)
+        if self._step_reached:
+            master_position = self._locator.get_locations(self._configurator.master_unit)
+            self._current_step = self._position_calculator.calculate_actual_target_position(master_position,
+                                                                                            self._current_step)
 
     def think(self):
-        if PolarPosition.are_positions_approximately_same(self.current_step, (0, 0)):
-            self.step_reached = True
+        """
+        Method processing environment state.
+        """
+        if PolarPosition.are_positions_approximately_same(self._current_step, (0, 0)):
+            self._step_reached = True
         else:
-            self.step_reached = False
+            self._step_reached = False
 
     def act(self):
-        if not self.step_reached:
+        """
+        Method issuing movement commands according to environment state.
+        """
+        if not self._step_reached:
             try:
-                self.steering_interface.update_data(locations=self.locations, master=self.configurator.master_unit)
-                self.steering_interface.drive_to_point(self.current_step)
-                self.current_step = (0, 0)
+                self._steering_interface.update_data(locations=self._locations, master=self._configurator.master_unit)
+                self._steering_interface.drive_to_point(self._current_step)
+                self._current_step = (0, 0)
             except ObstacleOnTheWayException as ootwe:
                 print(str(ootwe))
             except SteeringException:
                 print("Something went wrong")  # TODO: Add logger to whole project
-        elif self.step_reached:
+        elif self._step_reached:
             print("Dojechalem")
         else:  # We did not reach the step and still driving
             print("Pyr pyr.")
