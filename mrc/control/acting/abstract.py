@@ -40,7 +40,7 @@ class AbstractStrategy(ABC):
     def act(self, **kwargs):
         """
         Third method called in main controller loop.
-        It should be responsible for issuing proper control commands, according to already state.
+        It should be responsible for issuing proper control commands, according to processed state.
 
         Parameters
         ----------
