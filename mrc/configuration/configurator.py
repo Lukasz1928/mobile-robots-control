@@ -1,6 +1,7 @@
+from mrc.configuration.abstract_configurator import AbstractConfigurator
 
 
-class Configurator:
+class Configurator(AbstractConfigurator):
     """
     Container for data about robot's position in formation.
     """
