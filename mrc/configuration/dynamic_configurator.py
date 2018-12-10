@@ -1,5 +1,6 @@
 import json
 
+from ast import literal_eval
 from kazoo.client import KazooClient
 from kazoo.recipe.watchers import DataWatch
 
@@ -29,14 +30,11 @@ class DynamicConfigurator:
         self.zk_client.start()
         DataWatch(client=self.zk_client, path=self._znode_path, func=self._update_conifg)
 
-    def _update_conifg(self, data, stat):
-        new_config = json.loads(data.decode("utf-8"))
-        self.master_unit = new_config['master']
-        self.target_position = new_config['position']
-        self.set_identity(new_config['identity'])
-
-
-c = DynamicConfigurator('/abc', '127.0.0.1', '2181')
-
-while True:
-    pass
+    def _update_conifg(self, data, stat):  # stat not used but required by kazoo
+        try:
+            new_config = json.loads(data.decode("utf-8"))
+            self.master_unit = new_config['master']
+            self.target_position = literal_eval(new_config['position'])
+            self.set_identity(new_config['identity'])
+        except Exception:
+            pass
