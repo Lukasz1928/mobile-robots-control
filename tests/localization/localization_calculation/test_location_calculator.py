@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from parameterized import parameterized
 
-from mrc.localization.location_calculator import LocationCalculator
+from mrc.localization.calculator.location_calculator import LocationCalculator
 
 
 class LocationCalculatorTest(TestCase):

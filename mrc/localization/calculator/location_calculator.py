@@ -1,9 +1,10 @@
 import math
 
+from mrc.localization.calculator.abstract_calculator import AbstractLocationCalculator
 from mrc.utils.maths import vector_2d_length, normalize_point_in_circle
 
 
-class LocationCalculator:
+class LocationCalculator(AbstractLocationCalculator):
     def __init__(self, resolution, distance_function, circle_radius, angle_function=None):
         self.resolution = resolution
         self.image_circle_radius = circle_radius

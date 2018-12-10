@@ -5,20 +5,25 @@ class FisheyeCameraDataProcessor:
     """
     Class responsible for extracting diode localizations from given image
     """
-    def __init__(self, robot_ids):
+    def __init__(self, robot_ids, color_namer, location_calculator):
         """
         Parameters
         ----------
         robot_ids : list of Any
             List of robot IDs in environment. Type should be the same as used in `configurator`.
+        color_namer : ColorRecognitionStrategy
+            Object responsible for recognition of color in image
+        location_calculator : AbstractLocationCalculator
+            Object responsible for calculating relative location of robot based on its location in photo
         """
-        self.robot_ids = robot_ids # TODO: it will be used when everything is ready to use
+        self.robot_ids = robot_ids
         self.diode_detector = DiodeDetector()
-        self.location_calculator = None  # TODO: add it when it's done
+        self.diode_color_namer = color_namer
+        self.location_calculator = location_calculator
 
     def __call__(self, image, encoding='bgr', fast=False):
         """
-        Run calculations on imput image.
+        Run calculations on input image.
 
         Parameters
         ----------
@@ -34,5 +39,6 @@ class FisheyeCameraDataProcessor:
         # TODO
         """
         keypoints = self.diode_detector.detect(image, encoding, fast)
-        colors = self.location_calculator.calculate(image, keypoints)
-        return colors
+        colors = self.diode_color_namer()#part of image with keypoint)
+        locations = self.location_calculator.calculate(image, keypoints)
+        return locations
