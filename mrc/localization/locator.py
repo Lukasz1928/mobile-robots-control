@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 
@@ -32,11 +33,13 @@ class Locator(threading.Thread):
         self._process_data = process_data
         self.interval = interval
         self._running = False
+        self._logger = logging.getLogger(__name__)
 
     def run(self):
         """
         Main thread loop function
         """
+        self._logger.info("Locator started main loop")
         self._running = True
         while self._running:
             self._update_locations()
@@ -78,6 +81,7 @@ class Locator(threading.Thread):
                     self._locations[k] = None
         else:
             self._locations = {k: None for k in self._locations.keys()}
+        self._logger.debug("Locator updated locations")
 
     def get_locations(self, robot_id=None):
         """
@@ -103,6 +107,7 @@ class Locator(threading.Thread):
         Stop running locator thread
         """
         self._running = False
+        self._logger.info("Locator finished main loop")
 
     def is_running(self):
         """
@@ -126,6 +131,7 @@ class Locator(threading.Thread):
         """
         if robot_id not in self._locations.keys():
             self._locations[robot_id] = None
+            self._logger.info("Robot {} added".format(str(robot_id)))
 
     def remove_robot(self, robot_id):
         """
@@ -138,3 +144,4 @@ class Locator(threading.Thread):
         """
         if robot_id in self._locations.keys():
             del self._locations[robot_id]
+            self._logger.info("Robot {} removed".format(str(robot_id)))
