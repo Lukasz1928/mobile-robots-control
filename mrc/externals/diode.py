@@ -2,18 +2,12 @@ import wiringpi
 
 
 class WS2811:
-    def __init__(self, reset_pin=22, spi_ch=1, spi_speed=2000000):
-        self.reset_pin = reset_pin
+    def __init__(self, spi_ch=1, spi_speed=2000000):
         self.spi_ch = spi_ch
-        self.rgb = [0, 0, 0]
         self.spi_speed = spi_speed
+        self.rgb = [0, 0, 0]
         wiringpi.wiringPiSetupGpio()
-        wiringpi.digitalWrite(self.reset_pin, 1)
         wiringpi.wiringPiSPISetup(self.spi_ch, self.spi_speed)
-        self.reset()
-
-    def __call__(self):
-        self.send_color_via_spi()
 
     def send_color_via_spi(self):
         wiringpi.wiringPiSPIDataRW(self.spi_ch, bytes(self.rgb))
@@ -22,10 +16,6 @@ class WS2811:
         self._verify_color(rgb)
         self.rgb = rgb
         self.send_color_via_spi()
-
-    def reset(self):
-        wiringpi.digitalWrite(self.reset_pin, 0)
-        wiringpi.digitalWrite(self.reset_pin, 1)
 
     @staticmethod
     def _verify_color(rgb):
