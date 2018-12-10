@@ -4,8 +4,10 @@ from ast import literal_eval
 from kazoo.client import KazooClient
 from kazoo.recipe.watchers import DataWatch
 
+from mrc.configuration.abstract_configurator import AbstractConfigurator
 
-class DynamicConfigurator:
+
+class DynamicConfigurator(AbstractConfigurator):
     def __init__(self, znode_path, zookeeper_ip, zookeeper_port, set_external_identity=None):
         self.master_unit = None
         self.target_position = None
