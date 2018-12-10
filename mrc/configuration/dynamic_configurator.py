@@ -1,6 +1,8 @@
 import json
 
 from ast import literal_eval
+from json import JSONDecodeError
+
 from kazoo.client import KazooClient
 from kazoo.recipe.watchers import DataWatch
 
@@ -38,5 +40,6 @@ class DynamicConfigurator(AbstractConfigurator):
             self.master_unit = new_config['master']
             self.target_position = literal_eval(new_config['position'])
             self.set_identity(new_config['identity'])
-        except Exception:
+            print('{}, {}, {}'.format(self.master_unit, self.target_position, new_config['identity']))
+        except (KeyError, JSONDecodeError, TypeError, AttributeError):
             pass
