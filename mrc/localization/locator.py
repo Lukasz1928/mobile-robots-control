@@ -1,6 +1,5 @@
 import threading
 import time
-from typing import Callable
 
 
 class Locator(threading.Thread):
@@ -13,7 +12,7 @@ class Locator(threading.Thread):
         Amount of seconds between measurements.
     """
 
-    def __init__(self, robot_list: list, read_data: Callable, process_data: Callable = None, interval: float = 0.0):
+    def __init__(self, robot_list, read_data, process_data=None, interval=0.0):
         """
         Parameters
         ----------
