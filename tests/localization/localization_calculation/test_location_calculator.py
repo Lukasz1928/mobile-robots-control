@@ -12,7 +12,7 @@ class LocationCalculatorTest(TestCase):
         self.locations_in_photos = [(50, 50), (0, 50), (50, 0), (50, 100), (100, 50),
                                     (50 + 50 / math.sqrt(2), 50 + 50 / math.sqrt(2)), (25, 25)]
         self.distances_in_photo = [0, 1, 1, 1, 1, 1, 1 / math.sqrt(2)]
-        self.expected_angles = [0, 0, -math.pi / 2.0, math.pi / 2.0, math.pi, 3.0 * math.pi / 4.0, -math.pi / 4.0]
+        self.expected_angles = [0, -math.pi / 2.0, 0, math.pi, math.pi / 2.0, 3.0 * math.pi / 4.0, -math.pi / 4.0]
         self.circle_radius = 50
         self.resolution = (100, 100)
         self.distance_function = lambda x: x + 1  # Any arbitrary bijective function

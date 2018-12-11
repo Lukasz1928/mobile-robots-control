@@ -31,6 +31,6 @@ def rescale_rectangle(top_left, sides, ratio):
 
 def normalize_point_in_circle(point, resolution, radius):
     image_centre = (resolution[0] // 2, resolution[1] // 2)
-    point_vector = [image_centre[0] - point[0], point[1] - image_centre[1]]
+    point_vector = [image_centre[1] - point[1], point[0] - image_centre[0]]
     npv = [point_vector[0] / radius, point_vector[1] / radius]
     return npv
