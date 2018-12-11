@@ -32,9 +32,9 @@ class DynamicConfigurator(AbstractConfigurator):
             self.zk_client.close()
         self.zk_client = KazooClient(hosts='{}:{}'.format(self._zk_ip, self._zk_port))
         self.zk_client.start()
-        DataWatch(client=self.zk_client, path=self._znode_path, func=self._update_conifg)
+        DataWatch(client=self.zk_client, path=self._znode_path, func=self._update_config)
 
-    def _update_conifg(self, data, stat):  # stat not used but required by kazoo
+    def _update_config(self, data, stat):  # stat not used but required by kazoo
         try:
             new_config = json.loads(data.decode("utf-8"))
             self.master_unit = new_config['master']
