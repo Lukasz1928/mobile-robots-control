@@ -1,6 +1,5 @@
 import threading
 import time
-from typing import Callable
 
 
 class Locator(threading.Thread):
@@ -13,7 +12,7 @@ class Locator(threading.Thread):
         Amount of seconds between measurements.
     """
 
-    def __init__(self, robot_list: list, read_data: Callable, process_data: Callable = None, interval: float = 0.0):
+    def __init__(self, robot_list, read_data, process_data=None, interval=0.0):
         """
         Parameters
         ----------
@@ -65,9 +64,20 @@ class Locator(threading.Thread):
         return self.get_locations(robot_id)
 
     def _update_locations(self):
+        """
+        Read image and make calculations to get robots positions
+        """
         raw_data = self._read_data()
         processed_data = self._process_data(raw_data) if self._process_data is not None else raw_data
-        self._locations = processed_data
+        if processed_data:
+            for k, v in processed_data:
+                if k in self._locations.keys():
+                    self._locations[k] = v
+            for k, v in self._locations:
+                if k not in processed_data:
+                    self._locations[k] = None
+        else:
+            self._locations = {k: None for k in self._locations.keys()}
 
     def get_locations(self, robot_id=None):
         """

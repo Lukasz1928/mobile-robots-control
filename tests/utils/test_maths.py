@@ -68,7 +68,7 @@ class TestNormalizePoint(TestCase):
     def setUp(self):
         self.points = [(0, 0), (0, 50), (0, 100), (50, 0), (50, 50), (50, 100), (100, 0), (100, 50), (100, 100),
                        (50 + 50 / math.sqrt(2), 50 + 50 / math.sqrt(2)), (25, 25)]
-        self.expected_locations = [(1, -1), (1, 0), (1, 1), (0, -1), (0, 0), (0, 1), (-1, -1), (-1, 0), (-1, 1),
+        self.expected_locations = [(1, -1), (0, -1), (-1, -1), (1, 0), (0, 0), (-1, 0), (1, 1), (0, 1), (-1, 1),
                                    (-1 / math.sqrt(2), 1 / math.sqrt(2)), (0.5, -0.5)]
         self.resolution = (100, 100)
         self.radius = 50
