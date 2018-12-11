@@ -1,14 +1,18 @@
 import math
 
+from mrc.distance.distance_function import get_distance_function_from_file
 from mrc.localization.calculator.abstract_calculator import AbstractLocationCalculator
 from mrc.utils.maths import vector_2d_length, normalize_point_in_circle
 
 
 class LocationCalculator(AbstractLocationCalculator):
-    def __init__(self, resolution, distance_function, circle_radius, angle_function=None):
+    def __init__(self, resolution, circle_radius, distance_function=None, angle_function=None, filename=None):
         self.resolution = resolution
         self.image_circle_radius = circle_radius
-        self.distance_function = distance_function
+        if distance_function is not None:
+            self.distance_function = distance_function
+        else:
+            self.distance_function = get_distance_function_from_file(filename)
         self.angle_function = angle_function
 
     def calculate_location(self, point):

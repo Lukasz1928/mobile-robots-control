@@ -17,9 +17,9 @@ class LocationCalculatorTest(TestCase):
         self.resolution = (100, 100)
         self.distance_function = lambda x: x + 1  # Any arbitrary bijective function
         self.expected_distances = [self.distance_function(d) for d in self.distances_in_photo]
-        self.calculator = LocationCalculator(self.resolution, self.distance_function, self.circle_radius)
+        self.calculator = LocationCalculator(self.resolution, self.circle_radius, self.distance_function)
         self.angle_function_mock = Mock(name='angle')
-        self.custom_calculator = LocationCalculator(self.resolution, self.distance_function, self.circle_radius,
+        self.custom_calculator = LocationCalculator(self.resolution, self.circle_radius, self.distance_function,
                                                     self.angle_function_mock)
 
     @parameterized.expand([[i] for i in range(7)])
