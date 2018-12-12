@@ -28,7 +28,7 @@ class FollowMasterStrategy(AbstractStrategy):
         self._locator = locator
         self._configurator = configurator
         self._position_calculator = TargetPositionCalculator(self._configurator)
-        self._locations = None
+        self._locations = {}
         self._current_step = (0, 0)
         self._step_reached = True
         self._logger = logging.getLogger(__name__)
@@ -41,8 +41,11 @@ class FollowMasterStrategy(AbstractStrategy):
         self._locations = self._locator.get_locations(None)
         if self._step_reached:
             master_position = self._locator.get_locations(self._configurator.master_unit)
-            self._current_step = self._position_calculator.calculate_actual_target_position(master_position,
-                                                                                            self._current_step)
+            if master_position is None:
+                print("I have no master")
+            else:
+                self._current_step = self._position_calculator.calculate_actual_target_position(master_position,
+                                                                                                self._current_step)
 
     def think(self):
         """
