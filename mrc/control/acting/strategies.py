@@ -60,6 +60,7 @@ class FollowMasterStrategy(AbstractStrategy):
         """
         self._logger.debug("Act phase")
         if not self._step_reached:
+            self._logger.debug("Current step: {}".format(self._current_step))
             try:
                 self._steering_interface.update_data(locations=self._locations, master=self._configurator.master_unit)
                 self._steering_interface.drive_to_point(self._current_step)
