@@ -42,8 +42,9 @@ class FollowMasterStrategy(AbstractStrategy):
         if self._step_reached:
             master_position = self._locator.get_locations(self._configurator.master_unit)
             if master_position is None:
-                print("I have no master")
+                print(master_position)
             else:
+                print(master_position)
                 self._current_step = self._position_calculator.calculate_actual_target_position(master_position,
                                                                                                 self._current_step)
 
