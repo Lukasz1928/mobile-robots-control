@@ -38,7 +38,7 @@ class FollowMasterStrategy(AbstractStrategy):
         Method reading environment state.
         """
         self._logger.debug("Read phase")
-        self._locations = self._locator.get_locations(None)
+        # self._locations = self._locator.update_and_get_locations()
         if self._step_reached:
             master_position = self._locator.get_locations(self._configurator.master_unit)
             if master_position is None:
