@@ -1,3 +1,5 @@
+import logging
+
 from mrc.control.steering.abstract import AbstractDTPSteeringInterface
 from mrc.shared.exceptions.exceptions import ObstacleOnTheWayException
 
@@ -23,6 +25,7 @@ class CarefulDTPSteeringInterface(AbstractDTPSteeringInterface):
         self.all_robots_position = None
         self.motor_driver = motor_driver
         self.angle_offset = angle_offset
+        self._logger = logging.getLogger(__name__)
 
     def _in_route(self, target_point):
         r, theta = target_point
@@ -48,6 +51,7 @@ class CarefulDTPSteeringInterface(AbstractDTPSteeringInterface):
         if sth_in_route:
             raise ObstacleOnTheWayException("The path is blocked by robots: " + str(names))
         else:
+            self._logger.debug("Target point: {}".format(point))
             self.motor_driver.drive_to_point(*point)
 
     def update_data(self, locations, master):
@@ -81,6 +85,7 @@ class SimpleDTPSteeringInterface(AbstractDTPSteeringInterface):
             It has to provide method drive_to_point(float, float), where first field is distance, second field is angle.
         """
         self.motor_driver = motor_driver
+        self._logger = logging.getLogger(__name__)
 
     def drive_to_point(self, point):
         """
@@ -92,6 +97,7 @@ class SimpleDTPSteeringInterface(AbstractDTPSteeringInterface):
             Target position.
             First field is distance, second field is angle.
         """
+        self._logger.debug("Target point: {}".format(point))
         self.motor_driver.drive_to_point(*point)
 
     def update_data(self, locations, master):

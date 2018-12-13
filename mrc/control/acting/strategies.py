@@ -1,3 +1,5 @@
+import logging
+
 from mrc.control.acting.abstract import AbstractStrategy
 from mrc.control.movement_prediction.target_position_calculator import TargetPositionCalculator
 from mrc.shared.exceptions.exceptions import ObstacleOnTheWayException, SteeringException
@@ -29,11 +31,13 @@ class FollowMasterStrategy(AbstractStrategy):
         self._locations = None
         self._current_step = (0, 0)
         self._step_reached = True
+        self._logger = logging.getLogger(__name__)
 
     def read(self):
         """
         Method reading environment state.
         """
+        self._logger.debug("Read phase")
         self._locations = self._locator.get_locations(None)
         if self._step_reached:
             master_position = self._locator.get_locations(self._configurator.master_unit)
@@ -44,6 +48,7 @@ class FollowMasterStrategy(AbstractStrategy):
         """
         Method processing environment state.
         """
+        self._logger.debug("Think phase")
         if PolarPosition.are_positions_approximately_same(self._current_step, (0, 0)):
             self._step_reached = True
         else:
@@ -53,16 +58,18 @@ class FollowMasterStrategy(AbstractStrategy):
         """
         Method issuing movement commands according to environment state.
         """
+        self._logger.debug("Act phase")
         if not self._step_reached:
+            self._logger.debug("Current step: {}".format(self._current_step))
             try:
                 self._steering_interface.update_data(locations=self._locations, master=self._configurator.master_unit)
                 self._steering_interface.drive_to_point(self._current_step)
                 self._current_step = (0, 0)
             except ObstacleOnTheWayException as ootwe:
-                print(str(ootwe))
+                self._logger.warning(str(ootwe))
             except SteeringException:
-                print("Something went wrong")  # TODO: Add logger to whole project
+                self._logger.error("Steering error occured")
         elif self._step_reached:
-            print("Dojechalem")
+            self._logger.info("Step reached")
         else:  # We did not reach the step and still driving
-            print("Pyr pyr.")
+            self._logger.debug("Still going")

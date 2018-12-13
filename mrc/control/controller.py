@@ -1,3 +1,4 @@
+import logging
 from threading import Thread
 
 
@@ -21,6 +22,7 @@ class Controller(Thread):
         self._configurator = configurator
         self._running = False
         self._acting_strategy = acting_strategy
+        self._logger = logging.getLogger(__name__)
 
     def run(self):
         """
@@ -32,6 +34,7 @@ class Controller(Thread):
             3. act
         """
         self._running = True
+        self._logger.info("Controller main loop started")
         while self._running:
             self._acting_strategy.read()
             self._acting_strategy.think()
@@ -53,3 +56,4 @@ class Controller(Thread):
         Finish work of thread
         """
         self._running = False
+        self._logger.info("Controller main loop finished")
