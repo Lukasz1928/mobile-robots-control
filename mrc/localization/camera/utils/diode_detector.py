@@ -1,10 +1,7 @@
-from collections import defaultdict
 import cv2
 from mrc.localization.camera.utils.blob_detector import BlobDetector
 from mrc.localization.camera.utils.connected_components_detector import ConnectedComponentsDetector
 from mrc.localization.color.utils.color_converter import ColorConverter
-from mrc.utils.maths import point_in_rectangle
-import numpy as np
 
 
 class DiodeDetector:
@@ -54,7 +51,6 @@ class DiodeDetector:
         binary_image = self.color_converter.convert_to_binary(grayscale_image, threshold, color_encoding,
                                                               grayscale=True)
         stats, centroids = self.connected_components_detector.detect(binary_image)
-        print('s ' + str(stats))
         keypoints = []
         for s in stats:
             kp = self.blob_detector.detect(grayscale_image[s[1]:s[1]+s[3],s[0]:s[0]+s[2]])
@@ -62,9 +58,3 @@ class DiodeDetector:
                 p.pt = (p.pt[0] + s[0], p.pt[1] + s[1])
             keypoints.extend(kp)        
         return keypoints, stats
-
-dd = DiodeDetector()
-img = cv2.imread('C:/Users/Lukasz1928/Desktop/inz/mobile-robots-control/tests/resources/localization/diode_detection/blobs/single_blob/1.png')
-a, b = dd.detect(img)
-print(a)
-print(b)
