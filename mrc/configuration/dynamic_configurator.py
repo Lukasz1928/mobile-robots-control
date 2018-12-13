@@ -1,5 +1,4 @@
 import json
-
 from ast import literal_eval
 from json import JSONDecodeError
 
@@ -10,7 +9,33 @@ from mrc.configuration.abstract_configurator import AbstractConfigurator
 
 
 class DynamicConfigurator(AbstractConfigurator):
+    """
+    Dynamic configuration holder. Configuration may be changed during runtime with ZooKeeper services.
+
+    Attributes
+    ----------
+    master_unit : Any
+        Id of unit we're supposed to follow. Type should be compatible with id type in rest of code.
+    target_position : (float, float)
+        Tuple describing position relative from target. First value is distance, second one is angle.
+    zk_client : KazooClient
+
+    """
+
     def __init__(self, znode_path, zookeeper_ip, zookeeper_port, set_external_identity=None):
+        """
+        Parameters
+        ----------
+        znode_path : str
+            Path to znode used in ZooKeeper.
+        zookeeper_ip : str
+            Ip of ZooKeeper server.
+        zookeeper_port : str
+            Port of ZooKeeper server.
+        set_external_identity : Callable, optional
+            Function to call in case of identity change. It should be responsible for any external changes.
+            Default = None.
+        """
         self.master_unit = None
         self.target_position = None
         self._identity = None
@@ -23,6 +48,13 @@ class DynamicConfigurator(AbstractConfigurator):
         self._setup_watcher()
 
     def set_identity(self, identity):
+        """Method responsible for changing robot identity
+
+        Parameters
+        ----------
+        identity : Any
+            New ID of robot. It has to be compatible with locator.
+        """
         self._identity = identity
         if self._set_external_identity is not None:
             self._set_external_identity(self._identity)
