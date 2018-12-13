@@ -26,18 +26,26 @@ class Predicates:
 
 class ColorAnalyser:
     def __init__(self, color_values, predicate_strategy='gaussian'):
+        self.black_to_color_ratio = 80
+        self.diode_visibility_threshold = 20
         self._resolving_predicate = Predicates.allowed[predicate_strategy]
         self._color_values = color_values
 
     def analyse_chunk(self, image_chunk):
         pixel_list = image_chunk.reshape(-1, 3)
         mean_color = np.mean(pixel_list, axis=0)
-        return self._color_analysis(rgb2hsv(*mean_color))
+        black_colors = len(list(filter(self._is_diode, pixel_list)))
+        all_colors = pixel_list.shape[0]
+        return self._color_analysis(rgb2hsv(*mean_color)) if black_colors / all_colors < self.black_to_color_ratio else {}
 
     def _color_analysis(self, hsv_pixel):
         hue, _, _ = hsv_pixel
         return {color_val.name: self._resolving_predicate(hue, color_val.value) for color_val in
                 self._color_values}
+
+    def _is_diode(self, mean_color):
+        return (mean_color[0] * 0.2126 + mean_color[1] * 0.7152 + mean_color[
+            2] * 0.722) / 3 < self.diode_visibility_threshold
 
 
 class ColorCalculator:
@@ -50,4 +58,6 @@ class ColorCalculator:
 
     def _execute_analysis(self, chunk):
         analysis = self.analyser.analyse_chunk(chunk)
+        if analysis == {}:
+            return 'undefined'
         return reduce(lambda i1, i2: max(i1, i2, key=lambda x: x[1]), analysis.items())[0]
