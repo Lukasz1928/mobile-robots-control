@@ -44,8 +44,8 @@ class ColorAnalyser:
                 self._color_values}
 
     def _is_diode(self, mean_color):
-        return (mean_color[0] * 0.2126 + mean_color[1] * 0.7152 + mean_color[
-            2] * 0.722) / 3 < self.diode_visibility_threshold
+        return (mean_color[0] * 0.299 + mean_color[1] * 0.587 + mean_color[
+            2] * 0.114) < self.diode_visibility_threshold
 
 
 class ColorCalculator:
