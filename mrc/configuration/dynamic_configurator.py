@@ -29,7 +29,7 @@ class DynamicConfigurator(AbstractConfigurator):
         znode_path : str
             Path to znode used in ZooKeeper.
         zookeeper_ip : str
-            Ip of ZooKeeper node.
+            Ip of ZooKeeper server.
         zookeeper_port : str
             Port of ZooKeeper node.
         set_external_identity : Callable, optional

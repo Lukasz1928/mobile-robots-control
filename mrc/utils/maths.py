@@ -125,7 +125,7 @@ def rescale_rectangle(top_left, sides, ratio):
 
 def normalize_point_in_circle(point, resolution, radius):
     """
-    Calculates normalized length of distance between point and circle in center in middle of picture
+    Calculates normalized distance between point and center of picture in middle of picture
 
     Parameters
     ----------
