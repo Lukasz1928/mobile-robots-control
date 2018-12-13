@@ -9,7 +9,7 @@ class CameraReader:
     Class responsible for reading raw input from Raspberry Pi camera.
     """
 
-    def __init__(self, resolution=(640, 480)):
+    def __init__(self, resolution=(640, 480), brightness=30, contrast=100, sharpness=100, saturation=100):
         """
         Parameters
         ----------
@@ -24,7 +24,10 @@ class CameraReader:
         self.camera = PiCamera()
         self.camera_resolution = (math.ceil(resolution[1] / 16) * 16, math.ceil(resolution[0] / 32) * 32, 3)
         self.camera.resolution = resolution
-        self.camera.brightness = 30
+        self.camera.brightness = brightness
+        self.camera.contrast = contrast
+        self.camera.sharpness = sharpness
+        self.camera.saturation = saturation
 
     def __call__(self):
         """
