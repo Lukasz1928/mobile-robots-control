@@ -24,6 +24,7 @@ class CameraParametersCalculator:
 
     def calculate_parameters(self, filename=None):
         reality_angles = [math.atan(dist / self.h) for dist in self.reality_distances]
+        print(self.diode_detector.detect(self.photos[0], color_encoding=self.color_encoding))
         diodes = [self.diode_detector.detect(p, color_encoding=self.color_encoding)[0][0].pt for p in self.photos]
         photo_normalized_distances = [
             vector_2d_length(normalize_point_in_circle(d, self.resolution, self.circle_radius)) for d in diodes]
