@@ -31,7 +31,7 @@ class Configurator(AbstractConfigurator):
         self.set_identity(self._identity)
 
     def set_identity(self, identity):
-        """Function responsible for changing robot identity
+        """Method responsible for changing robot identity
 
         Parameters
         ----------
