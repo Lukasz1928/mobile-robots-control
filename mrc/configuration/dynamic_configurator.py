@@ -31,7 +31,7 @@ class DynamicConfigurator(AbstractConfigurator):
         zookeeper_ip : str
             Ip of ZooKeeper server.
         zookeeper_port : str
-            Port of ZooKeeper node.
+            Port of ZooKeeper server.
         set_external_identity : Callable, optional
             Function to call in case of identity change. It should be responsible for any external changes.
             Default = None.
