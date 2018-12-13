@@ -28,7 +28,7 @@ class CameraReader:
         self.camera.contrast = contrast
         self.camera.sharpness = sharpness
         self.camera.saturation = saturation
-
+        self.camera.exposure_mode = 'night'
     def __call__(self):
         """
         Captures frame from camera.

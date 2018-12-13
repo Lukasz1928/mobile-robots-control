@@ -1,5 +1,5 @@
 import cv2
-
+import numpy as np
 from mrc.shared.exceptions.exceptions import IncorrectShapeException
 
 
@@ -50,12 +50,12 @@ class BlobDetector:
         params.filterByColor = True
         params.blobColor = 255
         params.filterByCircularity = True
-        params.minCircularity = 0.1
+        params.minCircularity = 0.5
         params.filterByInertia = False
         params.filterByConvexity = False
-        params.minThreshold = int(0.4 * 255)
+        params.minThreshold = int(1)
         params.maxThreshold = int(255)
-        params.thresholdStep = 10
+        params.thresholdStep = 25
         if min_area is not None or max_area is not None:
             params.filterByArea = True
         if min_area is not None:
