@@ -31,7 +31,6 @@ class ConnectedComponentsDetector:
         list of array-like, list of array-like
             First one is list of five-element lists, containing info about connected component.
             Second one is list of (x, y) localizations of centers of mass of connected component.
-
         """
         num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(image)
         stats_list = stats.tolist()
@@ -41,7 +40,7 @@ class ConnectedComponentsDetector:
             stats_list.pop(background_component_index)
             centroids_list.pop(background_component_index)
         if remove_irrelevant and remove_background:
-            irrelevant_indexes = self._get_irrelevant_components_indexes(stats_list, centroids_list, 500, 25)
+            irrelevant_indexes = self._get_irrelevant_components_indexes(stats_list, centroids_list, 500, 50, 6000)
             stats_list = [stats_list[i] for i in range(len(stats_list)) if i not in irrelevant_indexes]
             centroids_list = [centroids_list[i] for i in range(len(centroids_list)) if i not in irrelevant_indexes]
         return stats_list, centroids_list
@@ -82,7 +81,8 @@ class ConnectedComponentsDetector:
                 return False
         return True
 
-    def _get_irrelevant_components_indexes(self, stats, centroids, diode_threshold, not_diode_threshold):
+    def _get_irrelevant_components_indexes(self, stats, centroids, diode_threshold, not_diode_low_threshold,
+                                           not_diode_high_threshold):
         if len(stats) == 0:
             return []
         s, c, indexes = (list(t) for t in
@@ -90,18 +90,20 @@ class ConnectedComponentsDetector:
                                      key=lambda x: x[0][cv2.CC_STAT_HEIGHT] * x[0][cv2.CC_STAT_WIDTH],
                                      reverse=True)))
 
-        rescaled_components_stats = []
+        used_components_stats = []
         diode_indexes = []
         i = 0
+        while i < len(c) and s[i][cv2.CC_STAT_HEIGHT] * s[i][cv2.CC_STAT_WIDTH] >= not_diode_high_threshold:
+            i += 1
         while i < len(c) and s[i][cv2.CC_STAT_HEIGHT] * s[i][cv2.CC_STAT_WIDTH] >= diode_threshold:
             if self._point_not_used(c[i], diode_indexes, s):
                 diode_indexes.append(i)
-                rescaled_components_stats.append(
+                used_components_stats.append(
                     tuple(rescale_rectangle((s[i][cv2.CC_STAT_LEFT], s[i][cv2.CC_STAT_TOP]),
-                                            (s[i][cv2.CC_STAT_WIDTH], s[i][cv2.CC_STAT_HEIGHT]), math.sqrt(2))))
+                                            (s[i][cv2.CC_STAT_WIDTH], s[i][cv2.CC_STAT_HEIGHT]), 1)))
             i += 1
-        while i < len(c) and s[i][cv2.CC_STAT_HEIGHT] * s[i][cv2.CC_STAT_WIDTH] >= not_diode_threshold:
-            if self._point_not_used_restrictive(c[i], rescaled_components_stats):
+        while i < len(c) and s[i][cv2.CC_STAT_HEIGHT] * s[i][cv2.CC_STAT_WIDTH] >= not_diode_low_threshold:
+            if self._point_not_used_restrictive(c[i], used_components_stats):
                 diode_indexes.append(i)
             i += 1
         return [indexes[i] for i in list(set(range(len(stats))) - set(diode_indexes))]
