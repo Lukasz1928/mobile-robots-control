@@ -41,7 +41,7 @@ class ConnectedComponentsDetector:
             stats_list.pop(background_component_index)
             centroids_list.pop(background_component_index)
         if remove_irrelevant and remove_background:
-            irrelevant_indexes = self._get_irrelevant_components_indexes(stats_list, centroids_list, 500, 25, 90000)
+            irrelevant_indexes = self._get_irrelevant_components_indexes(stats_list, centroids_list, 500, 25, 6000)
             stats_list = [stats_list[i] for i in range(len(stats_list)) if i not in irrelevant_indexes]
             centroids_list = [centroids_list[i] for i in range(len(centroids_list)) if i not in irrelevant_indexes]
         return stats_list, centroids_list
@@ -101,7 +101,7 @@ class ConnectedComponentsDetector:
                 diode_indexes.append(i)
                 rescaled_components_stats.append(
                     tuple(rescale_rectangle((s[i][cv2.CC_STAT_LEFT], s[i][cv2.CC_STAT_TOP]),
-                                            (s[i][cv2.CC_STAT_WIDTH], s[i][cv2.CC_STAT_HEIGHT]), math.sqrt(2))))
+                                            (s[i][cv2.CC_STAT_WIDTH], s[i][cv2.CC_STAT_HEIGHT]), 1)))
             i += 1
         while i < len(c) and s[i][cv2.CC_STAT_HEIGHT] * s[i][cv2.CC_STAT_WIDTH] >= not_diode_low_threshold:
             if self._point_not_used_restrictive(c[i], rescaled_components_stats):
