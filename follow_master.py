@@ -12,13 +12,13 @@ from mrc.localization.color.quick_mean.quick_mean import QuickMeanStrategy
 from mrc.localization.locator import Locator
 from mock_driver.driver import Driver
 
-robots_list = ['red']
+robots_list = ['blue']
 locator = Locator(robots_list, CameraReader(), FisheyeCameraDataProcessor(
     robots_list, QuickMeanStrategy(), LocationCalculator(
-        (640, 480), 411, lambda x: 6*math.tan(math.pi/2 * x)
+        (640, 480), 225, lambda x: 17*math.tan(math.pi/2 * x)
     )
 ))
-configurator = Configurator('red', (10, 0), 'yellow')
+configurator = Configurator('blue', (10, 0), 'yellow')
 motor_driver = Driver()
 acting_strategy = FollowMasterStrategy(SimpleDTPSteeringInterface(motor_driver), locator, configurator)
 controller = Controller(locator, configurator, acting_strategy)
