@@ -64,6 +64,7 @@ class Locator(threading.Thread):
         """
         if not self.is_running():
             self._update_locations()
+        print('updated locations: ' + str(self.get_locations()))
         return self.get_locations(robot_id)
 
     def _update_locations(self):
