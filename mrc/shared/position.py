@@ -21,7 +21,7 @@ class PolarPosition:
         return {0: self.angle, 1: self.radius}
 
     @staticmethod
-    def are_positions_approximately_same(location_one, location_two, radius_eps=5, angle_eps=0.2):
+    def are_positions_approximately_same(location_one, location_two, radius_eps=10, angle_eps=0.5):
         """
         Checks if given two locations are almost same
 
