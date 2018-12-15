@@ -23,12 +23,12 @@ class Driver:
     def _calculate_sleep_time_for_rotation(self, angle):
         angle = abs(angle)
         if angle < 3.1415 / 2:
-            return 0.75 * angle / 3.1415 - 0.05
+            return max(0.75 * angle / 3.1415 - 0.05, 0)
         else:
-            return 0.7 * angle / 3.1415
+            return max(0.7 * angle / 3.1415, 0)
 
     def _calculate_sleep_time_for_drive(self, distance):
-        return distance / 30.0
+        return max(distance / 30.0, 0)
 
     def drive(self, distance):
         self.driver.drive(self.drive_speed, self.drive_speed)
