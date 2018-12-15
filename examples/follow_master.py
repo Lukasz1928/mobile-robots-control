@@ -1,3 +1,4 @@
+import logging
 import math
 import time
 
@@ -12,6 +13,9 @@ from mrc.localization.color.quick_mean.quick_mean import QuickMeanStrategy
 from mrc.localization.locator import Locator
 from mock_driver.driver import Driver
 
+
+logging.basicConfig(level=logging.INFO)
+
 robots_list = ['blue']
 locator = Locator(robots_list, CameraReader(), FisheyeCameraDataProcessor(
     robots_list, QuickMeanStrategy(), LocationCalculator(
@@ -24,5 +28,4 @@ acting_strategy = FollowMasterStrategy(SimpleDTPSteeringInterface(motor_driver),
 controller = Controller(locator, configurator, acting_strategy)
 
 controller.run()
-time.sleep(20)
 controller.stop()
