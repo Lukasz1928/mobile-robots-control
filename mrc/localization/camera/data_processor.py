@@ -41,8 +41,11 @@ class FisheyeCameraDataProcessor:
             Location for each robot found in image
         """
         points, stats = self.diode_detector.detect(image, 10, encoding)
+        print('points: ' + str(points))
+        print('stats: ' + str(stats))
         if points:
             colors = [self.diode_color_namer(image[y:y + h, x: x + w]) for x, y, w, h, _ in stats]
+            print('colors: ' + str(colors))
             locations = [self.location_calculator.calculate_location(p.pt) for p in points]
             return {col: loc for (col, loc) in zip(colors, locations)}
         return {}
