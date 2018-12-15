@@ -39,6 +39,7 @@ class FollowMasterStrategy(AbstractStrategy):
         """
         self._logger.debug("Read phase")
         # self._locations = self._locator.update_and_get_locations()
+        self._locations = self._locator.update_and_get_locations()
         if self._step_reached:
             master_position = self._locator.get_locations(self._configurator.master_unit)
             if master_position is None:
@@ -74,6 +75,10 @@ class FollowMasterStrategy(AbstractStrategy):
             except SteeringException:
                 self._logger.error("Steering error occured")
         elif self._step_reached:
+<<<<<<< HEAD
             self._logger.info("Step reached")
+=======
+            print("Target achieved")
+>>>>>>> 466b47ac19eb6fcc96012b7d2069cb71d9b0c9a8
         else:  # We did not reach the step and still driving
             self._logger.debug("Still going")
