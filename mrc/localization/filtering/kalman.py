@@ -10,7 +10,7 @@ class KalmanPredictor:
         self.kf.measurementMatrix = np.array([[1, 0, 0, 0], [0, 1, 0, 0]], np.float32)
         self.kf.transitionMatrix = np.array([[1, 0, 1, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
         self.kf.measurementNoiseCov = np.array([[1.5, 0], [0, 1.5]], np.float32)
-        self.kf.errorCovPre = np.array([[50, 0, 0, 0], [0, 50, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
+        # self.kf.errorCovPre = np.array([[50, 0, 0, 0], [0, 50, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
         # self.kf.processNoiseCov = np.array([[5, 0, 5, 0], [0, 5, 0, 5], [0, 0, 5, 0], [0, 0, 0, 5]], np.float32)
         # self.kf.errorCovPost = np.array([[1, 0, 1, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
 
