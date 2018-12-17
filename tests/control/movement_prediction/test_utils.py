@@ -3,7 +3,7 @@ from unittest import TestCase
 import numpy as np
 from parameterized import parameterized
 
-from mrc.control.movement_prediction.utils import translate_coordinate_system, calculate_movement_vector, sum_vectors
+from mrc.utils.vector import translate_coordinate_system, calculate_movement_vector, sum_vectors
 from tests.control.movement_prediction.common import old_vectors, translations, new_vectors, current_positions, \
     movement_vectors, sum_of_vectors
 

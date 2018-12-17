@@ -5,6 +5,7 @@ from mrc.control.acting.abstract import AbstractStrategy
 from mrc.control.movement_prediction.target_position_calculator import TargetPositionCalculator
 from mrc.shared.exceptions.exceptions import ObstacleOnTheWayException, SteeringException
 from mrc.shared.position import PolarPosition
+from mrc.utils.vector import mean_position
 
 
 class FollowMasterStrategy(AbstractStrategy):
@@ -145,3 +146,58 @@ class FollowMasterInDistanceStrategy(AbstractStrategy):
                 self._logger.error("Steering error occured")
         elif self._step_reached:
             self._logger.info("Step reached")
+
+
+class GoBetweenTwoStrategy(AbstractStrategy):
+    def __init__(self, steering_interface, locator, configurator):
+        """
+        Parameters
+        ----------
+        steering_interface : mrc.control.steering.abstract.AbstractDTPSteeringInterface
+            Robot steering interface, responsible for moving unit to received target place.
+        locator : mrc.localization.locator.Locator
+            Main localization class, responsible for reading the info about environment.
+        configurator : mrc.configuration.configurator.Configurator
+            Robot configuration container.
+        """
+        self._steering_interface = steering_interface
+        self._locator = locator
+        self._configurator = configurator
+        self._logger = logging.getLogger(__name__)
+        self.positions = []
+        self._step_reached = True
+        self._current_step = (0, 0)
+
+    def read(self, **kwargs):
+        """
+        Method reading environment state.
+        """
+        self._logger.debug("Read phase")
+        locations = self._locator.get_locations(None)
+        self.positions = [locations[self._configurator.master_unit[0]], locations[self._configurator.master_unit[1]]]
+
+    def think(self, **kwargs):
+        """
+        Method processing environment state.
+        """
+        self._logger.debug("Think phase")
+        self._current_step = mean_position(*self.positions)
+
+    def act(self, **kwargs):
+        """
+        Method issuing movement commands according to environment state.
+        """
+        self._logger.debug("Act phase")
+        if not self._step_reached:
+            self._logger.debug("Current step: {}".format(self._current_step))
+            try:
+                self._steering_interface.drive_to_point(self._current_step)
+                self._current_step = (0, 0)
+            except ObstacleOnTheWayException as ootwe:
+                self._logger.warning(str(ootwe))
+            except SteeringException:
+                self._logger.error("Steering error occured")
+        elif self._step_reached:
+            self._logger.info("Step reached")
+        else:  # We did not reach the step and still driving
+            self._logger.debug("Still going")

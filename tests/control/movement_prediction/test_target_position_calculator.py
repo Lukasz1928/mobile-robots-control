@@ -5,7 +5,7 @@ import numpy as np
 from parameterized import parameterized
 
 from mrc.control.movement_prediction.target_position_calculator import TargetPositionCalculator
-from mrc.control.movement_prediction.utils import sum_vectors, translate_coordinate_system
+from mrc.utils.vector import sum_vectors, translate_coordinate_system
 from tests.control.movement_prediction.common import old_vectors, current_positions, movement_vectors, translations, \
     new_vectors
 
