@@ -117,7 +117,7 @@ class FollowMasterInDistanceStrategy(AbstractStrategy):
         if self._master_position is not None:
             distance = self._master_position[0] - self._configurator.target_position[0]
             rotation = self._master_position[1] + math.pi if distance < 0 else self._master_position[1]
-            self._current_step = (distance, rotation)
+            self._current_step = (abs(distance), rotation)
         if PolarPosition.are_positions_approximately_same(self._current_step, (0, 0), angle_eps=math.pi * 2):
             self._step_reached = True
         else:
