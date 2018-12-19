@@ -20,7 +20,8 @@ class LocationCalculator(AbstractLocationCalculator):
 
     def calculate_location(self, point):
         norm_point = normalize_point_in_circle(point, self.resolution, self.image_circle_radius)
-        return self._calculate_distance(norm_point), self._calculate_angle(norm_point)
+        return self._calculate_distance(norm_point), self._calculate_angle(norm_point) if vector_2d_length(
+            norm_point) <= 1 else None
 
     def _calculate_distance(self, normalized_point):
         return self.distance_function(vector_2d_length(normalized_point))
