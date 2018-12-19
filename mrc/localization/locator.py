@@ -73,10 +73,10 @@ class Locator(threading.Thread):
         raw_data = self._read_data()
         processed_data = self._process_data(raw_data) if self._process_data is not None else raw_data
         if processed_data:
-            for k, v in processed_data:
+            for k, v in processed_data.items():
                 if k in self._locations.keys():
                     self._locations[k] = v
-            for k, v in self._locations:
+            for k, v in self._locations.items():
                 if k not in processed_data:
                     self._locations[k] = None
         else:
