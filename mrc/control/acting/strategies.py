@@ -107,7 +107,10 @@ class FollowMasterInDistanceStrategy(AbstractStrategy):
         """
         self._logger.debug("Read phase")
         self._locations = self._locator.get_locations(None)
-        self._master_position = self._locator.get_locations(self._configurator.master_unit)
+        if self._locator.is_running():
+            self._master_position = self._locator.get_locations(self._configurator.master_unit)
+        else:
+            self._master_position = self._locator.update_and_get_locations(self._configurator.master_unit)
 
     def think(self, **kwargs):
         """
@@ -116,8 +119,8 @@ class FollowMasterInDistanceStrategy(AbstractStrategy):
         self._logger.debug("Think phase")
         if self._master_position is not None:
             distance = self._master_position[0] - self._configurator.target_position[0]
-            rotation = self._master_position[1] + math.pi if distance < 0 else self._master_position[1]
-            self._current_step = (abs(distance), rotation)
+            rotation = self._master_position[1]
+            self._current_step = (distance, rotation)
         if PolarPosition.are_positions_approximately_same(self._current_step, (0, 0), angle_eps=math.pi * 2):
             self._step_reached = True
         else:
