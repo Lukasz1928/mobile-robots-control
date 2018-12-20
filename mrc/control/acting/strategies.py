@@ -135,7 +135,10 @@ class FollowMasterInDistanceStrategy(AbstractStrategy):
             self._logger.debug("Current step: {}".format(self._current_step))
             try:
                 self._steering_interface.update_data(locations=self._locations, master=self._configurator.master_unit)
-                self._steering_interface.drive_to_point(self._current_step)
+                if self._master_position is not None:
+                    self._steering_interface.drive_to_point(self._current_step)
+                else:
+                    self._steering_interface.drive_to_point((0, 0))
             except ObstacleOnTheWayException as ootwe:
                 self._logger.warning(str(ootwe))
             except SteeringException:
