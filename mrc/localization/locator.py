@@ -2,6 +2,8 @@ import logging
 import threading
 import time
 
+from mrc.localization.filtering.kalman import KalmanPredictor
+
 
 class Locator(threading.Thread):
     """
@@ -32,6 +34,7 @@ class Locator(threading.Thread):
         self._read_data = read_data
         self._process_data = process_data
         self.interval = interval
+        self.predictors = {robot_id: KalmanPredictor() for robot_id in robot_list}
         self._running = False
         self._logger = logging.getLogger(__name__)
 
@@ -75,12 +78,13 @@ class Locator(threading.Thread):
         if processed_data:
             for k, v in processed_data.items():
                 if k in self._locations.keys():
+                    self.predictors[k].update(*v)
                     self._locations[k] = v
             for k, v in self._locations.items():
                 if k not in processed_data:
-                    self._locations[k] = None
+                    self._locations[k] = self.predictors[k].predict()
         else:
-            self._locations = {k: None for k in self._locations.keys()}
+            self._locations = {k: self.predictors[k].predict() for k in self._locations.keys()}
         self._logger.debug("Locator updated locations")
 
     def get_locations(self, robot_id=None):
@@ -131,6 +135,7 @@ class Locator(threading.Thread):
         """
         if robot_id not in self._locations.keys():
             self._locations[robot_id] = None
+            self.predictors[robot_id] = KalmanPredictor()
             self._logger.info("Robot {} added".format(str(robot_id)))
 
     def remove_robot(self, robot_id):
@@ -144,4 +149,5 @@ class Locator(threading.Thread):
         """
         if robot_id in self._locations.keys():
             del self._locations[robot_id]
+            del self.predictors[robot_id]
             self._logger.info("Robot {} removed".format(str(robot_id)))
