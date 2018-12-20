@@ -1,4 +1,4 @@
-from mrc.control.movement_prediction.utils import calculate_movement_vector, translate_coordinate_system, sum_vectors
+from mrc.utils.vector import calculate_movement_vector, translate_coordinate_system, sum_vectors
 
 
 class TargetPositionCalculator:

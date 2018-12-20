@@ -28,6 +28,26 @@ def _normalize_polars(coords):
     return coords[0], _normalize_angle(coords[1])
 
 
+def mean_position(*vecs):
+    """
+    Returns mean of input polar coordinates vectors, in format used by library.
+
+    Parameters
+    ----------
+    *vecs
+        Variable length list of (float, float) array-likes, where first field is distance, second is radius.
+
+    Returns
+    -------
+    float, float
+        Vector, where first field is distance, second is radius.
+    """
+    norm_vecs_c = [_polar2cartesian(_normalize_polars(vector)) for vector in vecs]
+    vec_sum = np.sum(norm_vecs_c, axis=0)
+    vec_res = [value / len(vecs) for value in vec_sum]
+    return _normalize_polars(_cartesian2polar(vec_res))
+
+
 def sum_vectors(*vecs):
     """
     Returns sum of input polar coordinates vectors, in format used by library.
